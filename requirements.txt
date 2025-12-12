@@ -1,5 +1,5 @@
 colorama==0.4.6
 pylsl~=1.17.6
 pyxdf~=1.17.1
-scikit-learn~=1.7.2
+scikit-learn~=1.8.0
 tqdm~=4.67.1
