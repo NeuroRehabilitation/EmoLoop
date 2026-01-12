@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Loop System.iml" filepath="$PROJECT_DIR$/.idea/Loop System.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/EmoLoop.iml" filepath="$PROJECT_DIR$/.idea/EmoLoop.iml" />
     </modules>
   </component>
 </project>
