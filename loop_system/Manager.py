@@ -1,10 +1,9 @@
-import csv
 import os.path
 import sys
 
+from loop_system.Baseline import select_file
 from loop_system.ModelTrainer import *
 from loop_system.Process import *
-from loop_system.Baseline import select_file
 
 warnings.filterwarnings("ignore")
 
