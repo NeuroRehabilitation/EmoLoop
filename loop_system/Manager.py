@@ -58,9 +58,7 @@ class Manager(multiprocessing.Process):
         modelTrainer = ModelTrainer()
 
         """Load and Select Baseline Data file"""
-        baseline_file = select_file(
-            "Select the Baseline data file.", [("CSV files", "*.csv")]
-        )
+        baseline_file = select_file("Select the Baseline data file.", [("CSV files", "*.csv")])
 
         if not baseline_file:
             print("No baseline file selected. Exiting...")
@@ -78,9 +76,7 @@ class Manager(multiprocessing.Process):
 
         """Load and Select Training Data file"""
 
-        training_data = select_file(
-            "Select the training data file.", [("CSV files", "*.csv")]
-        )
+        training_data = select_file("Select the training data file.", [("CSV files", "*.csv")])
 
         if not training_data:
             print("No training data file selected. Exiting...")
@@ -118,9 +114,7 @@ class Manager(multiprocessing.Process):
         os.makedirs(log_folder, exist_ok=True)  # Ensure directory exists
         log_file_path = os.path.join(log_folder, "output.txt")
 
-        print(
-            "Logging output to {log_file_path}...".format(log_file_path=log_file_path)
-        )
+        print("Logging output to {log_file_path}...".format(log_file_path=log_file_path))
 
         log_file = open(log_file_path, "w")
         sys.stdout = TeeLogger(log_file)
@@ -245,8 +239,11 @@ class Manager(multiprocessing.Process):
             pass
         finally:
             try:
-                model_path = os.path.join(base_dir, f"model_v{self.model_version}.pkl")
-                joblib.dump(self.model, model_path)
+                model_path = os.path.join(base_dir, f"model_v{self.model_version}.pkl" )
+                joblib.dump(
+                    self.model,
+                    model_path
+                )
                 print(f"Model saved successfully to {model_path}")
             except Exception as e:
                 print(f"Error saving the model: {e}")
@@ -264,7 +261,6 @@ class Manager(multiprocessing.Process):
             data_sender.terminate()
             data_sender.join()
             print("Closed all processes.")
-
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()
