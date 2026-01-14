@@ -7,14 +7,12 @@ from loop_system.Signals_Processing import *
 
 warnings.filterwarnings("ignore")
 
+
 def select_file(title, filetypes):
     root = tk.Tk()
     root.withdraw()  # hide the main Tkinter window
 
-    file_path = filedialog.askopenfilename(
-        title=title,
-        filetypes=filetypes
-    )
+    file_path = filedialog.askopenfilename(title=title, filetypes=filetypes)
 
     if not file_path:
         print("No file selected. Exiting...")
@@ -22,11 +20,12 @@ def select_file(title, filetypes):
 
     return file_path
 
+
 def main():
     start_time = time.time()
 
     # Prompt user to select the XDF file
-    file_path = select_file("Select the Baseline data file",[("XDF files", "*.xdf")])
+    file_path = select_file("Select the Baseline data file", [("XDF files", "*.xdf")])
 
     # Extract folder and condition name from the file path
     folder = os.path.dirname(file_path)
@@ -70,6 +69,7 @@ def main():
         print(f"Baseline Dataframe saved to {save_path}.")
     except Exception as e:
         print(f"An error occurred saving the Baseline Dataframe: {e}")
+
 
 if __name__ == "__main__":
     main()

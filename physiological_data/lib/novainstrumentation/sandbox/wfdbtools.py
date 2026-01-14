@@ -1,4 +1,4 @@
-#@PydevCodeAnalysisIgnore
+# @PydevCodeAnalysisIgnore
 
 #!/usr/bin/env python
 
@@ -23,7 +23,7 @@
 
 
 """
-A pure python module for accessing and using the waveform data in `Physiobank <http://www.physionet.org/physiobank/>`_. 
+A pure python module for accessing and using the waveform data in `Physiobank <http://www.physionet.org/physiobank/>`_.
 Provides `rdsamp` and `rdann` which are the python equivalents of the wfdb applications
 of similar names.
 A deliberate attempt is made to try to keep names and usage similar to the
@@ -37,14 +37,14 @@ Example Usage::
 
     >> from wfdbtools import rdsamp, rdann, plot_data
     >> from pprint import pprint
-    
+
     # Record is a format 212 record from physiobank.
     # Note that name of record does not include extension.
     >> record  = 'samples/format212/100'
 
     # Read in the data from 0 to 10 seconds
     >> data, info = rdsamp(record, 0, 10)
-    
+
     # returned data is an array. The columns are time(samples),
     # time(seconds), signal1, signal2
     >> print data.shape
@@ -58,7 +58,7 @@ Example Usage::
     'samp_freq': 360,
     'signal_names': ['MLII', 'V5'],
     'zero_values': [1024, 1024]}
-    
+
     # And now read the annotation
     >> ann = rdann(record, 'atr', 0, 10)
 
@@ -68,8 +68,8 @@ Example Usage::
               [  77.   ,    0.214,    1.   ],
               [ 370.   ,    1.028,    1.   ],
               [ 662.   ,    1.839,    1.   ]])
-    
-    
+
+
     # Plot the data and the mark the annotations
     >> plot_data(data, info, ann)
 
@@ -85,57 +85,57 @@ import warnings
 
 import numpy
 
-#import pylab
-#from pprint import pprint
+# import pylab
+# from pprint import pprint
 
-__author__ = 'Raja Selvaraj <rajajs@gmail.com>'
-__version__ = '0.2'
+__author__ = "Raja Selvaraj <rajajs@gmail.com>"
+__version__ = "0.2"
 
 ## Annotation codes
 CODEDICT = {
-    0 : 'NOTQRS',	# not-QRS (not a getann/putann codedict) */
-    1 : 'NORMAL',	# normal beat */
-    2 : 'LBBB',	# left bundle branch block beat */
-    3 : 'RBBB',	# right bundle branch block beat */
-    4 : 'ABERR',	# aberrated atrial premature beat */
-    5 : 'PVC',	# premature ventricular contraction */
-    6 : 'FUSION',	# fusion of ventricular and normal beat */
-    7 : 'NPC',	# nodal (junctional) premature beat */
-    8 : 'APC',	# atrial premature contraction */
-    9 : 'SVPB',	# premature or ectopic supraventricular beat */
-    10 : 'VESC',	# ventricular escape beat */
-    11 : 'NESC',	# nodal (junctional) escape beat */
-    12 : 'PACE',	# paced beat */
-    13 : 'UNKNOWN',	# unclassifiable beat */
-    14 : 'NOISE',	# signal quality change */
-    16 : 'ARFCT',	# isolated QRS-like artifact */
-    18 : 'STCH',	# ST change */
-    19 : 'TCH',	# T-wave change */
-    20 : 'SYSTOLE',	# systole */
-    21 : 'DIASTOLE',	# diastole */
-    22 : 'NOTE',	# comment annotation */
-    23 : 'MEASURE',	# measurement annotation */
-    24 : 'PWAVE',	# P-wave peak */
-    25 : 'BBB',	# left or right bundle branch block */
-    26 : 'PACESP',	# non-conducted pacer spike */
-    27 : 'TWAVE',	# T-wave peak */
-    28 : 'RHYTHM',	# rhythm change */
-    29 : 'UWAVE',	# U-wave peak */
-    30 : 'LEARN',	# learning */
-    31 : 'FLWAV',	# ventricular flutter wave */
-    32 : 'VFON',	# start of ventricular flutter/fibrillation */
-    33 : 'VFOFF',	# end of ventricular flutter/fibrillation */
-    34 : 'AESC',	# atrial escape beat */
-    35 : 'SVESC',	# supraventricular escape beat */
-    36 : 'LINK',	# link to external data (aux contains URL) */
-    37 : 'NAPC',	# non-conducted P-wave (blocked APB) */
-    38 : 'PFUS',	# fusion of paced and normal beat */
-    39 : 'WFON',	# waveform onset */
-    #WFON : 'PQ',	# PQ junction (beginning of QRS) */
-    40 : 'WFOFF',	# waveform end */
-    #WFOFF : 'JPT',	# J point (end of QRS) */
-    41 : 'RONT'	# R-on-T premature ventricular contraction */
-    }
+    0: "NOTQRS",  # not-QRS (not a getann/putann codedict) */
+    1: "NORMAL",  # normal beat */
+    2: "LBBB",  # left bundle branch block beat */
+    3: "RBBB",  # right bundle branch block beat */
+    4: "ABERR",  # aberrated atrial premature beat */
+    5: "PVC",  # premature ventricular contraction */
+    6: "FUSION",  # fusion of ventricular and normal beat */
+    7: "NPC",  # nodal (junctional) premature beat */
+    8: "APC",  # atrial premature contraction */
+    9: "SVPB",  # premature or ectopic supraventricular beat */
+    10: "VESC",  # ventricular escape beat */
+    11: "NESC",  # nodal (junctional) escape beat */
+    12: "PACE",  # paced beat */
+    13: "UNKNOWN",  # unclassifiable beat */
+    14: "NOISE",  # signal quality change */
+    16: "ARFCT",  # isolated QRS-like artifact */
+    18: "STCH",  # ST change */
+    19: "TCH",  # T-wave change */
+    20: "SYSTOLE",  # systole */
+    21: "DIASTOLE",  # diastole */
+    22: "NOTE",  # comment annotation */
+    23: "MEASURE",  # measurement annotation */
+    24: "PWAVE",  # P-wave peak */
+    25: "BBB",  # left or right bundle branch block */
+    26: "PACESP",  # non-conducted pacer spike */
+    27: "TWAVE",  # T-wave peak */
+    28: "RHYTHM",  # rhythm change */
+    29: "UWAVE",  # U-wave peak */
+    30: "LEARN",  # learning */
+    31: "FLWAV",  # ventricular flutter wave */
+    32: "VFON",  # start of ventricular flutter/fibrillation */
+    33: "VFOFF",  # end of ventricular flutter/fibrillation */
+    34: "AESC",  # atrial escape beat */
+    35: "SVESC",  # supraventricular escape beat */
+    36: "LINK",  # link to external data (aux contains URL) */
+    37: "NAPC",  # non-conducted P-wave (blocked APB) */
+    38: "PFUS",  # fusion of paced and normal beat */
+    39: "WFON",  # waveform onset */
+    # WFON : 'PQ',	# PQ junction (beginning of QRS) */
+    40: "WFOFF",  # waveform end */
+    # WFOFF : 'JPT',	# J point (end of QRS) */
+    41: "RONT",  # R-on-T premature ventricular contraction */
+}
 
 
 def rdsamp(record, start=0, end=-1, interval=-1):
@@ -145,7 +145,7 @@ def rdsamp(record, start=0, end=-1, interval=-1):
     Only 2 channel records in format 212 are supported.
     This is the most common record in the
     Physionet database(http://www.physionet.org/physiobank/).
-    
+
     Parameters
     ----------
     record : str
@@ -165,7 +165,7 @@ def rdsamp(record, start=0, end=-1, interval=-1):
           col 1 - Elapsed time in samples
           col 2 - Elapsed time in milliseconds
           col 3,4 - The two signals
-          Signal amplitude is in physical units (mV)          
+          Signal amplitude is in physical units (mV)
     info : dict
           Dictionary containing header information
           keys :
@@ -175,15 +175,16 @@ def rdsamp(record, start=0, end=-1, interval=-1):
           'first_values' - First value of each signal
           'gains' - Gain for each signal
           'zero_values' - Zero value for each signal
-    
+
     """
     # read the header file - output is a dict
     info = rdhdr(record)
     # establish start and end in samples
     start, end = _get_read_limits(start, end, interval, info)
     # read the data
-    data = _read_data(record, start, end, info) 
+    data = _read_data(record, start, end, info)
     return data, info
+
 
 def rdann(record, annotator, start=0, end=-1, types=[]):
     """
@@ -205,7 +206,7 @@ def rdann(record, annotator, start=0, end=-1, types=[]):
             Types are input as annotation code (integer from 0 to 49)
             Annotation types not in list will be ignored.
             Default is empty list, which results in all types being read.
-            
+
     Returns
     -------
     data : (N, 3) ndarray
@@ -217,10 +218,10 @@ def rdann(record, annotator, start=0, end=-1, types=[]):
     """
     # get header data
     info = rdhdr(record)
-    
-    annfile = ''.join((record, '.', annotator))
-    with open(annfile, 'rb') as f:
-        arr = numpy.fromstring(f.read(), dtype = numpy.uint8).reshape((-1, 2))
+
+    annfile = "".join((record, ".", annotator))
+    with open(annfile, "rb") as f:
+        arr = numpy.fromstring(f.read(), dtype=numpy.uint8).reshape((-1, 2))
 
     rows = arr.shape[0]
     annot = []
@@ -230,9 +231,14 @@ def rdann(record, annotator, start=0, end=-1, types=[]):
     while i < rows:
         anntype = arr[i, 1] >> 2
         if anntype == 59:
-            annot.append(arr[i+3, 1] >> 2)
-            annot_time.append(arr[i+2, 0] + (arr[i+2, 1] << 8) +
-                              (arr[i+1, 0] << 16) + arr[i+1, 1] << 24)
+            annot.append(arr[i + 3, 1] >> 2)
+            annot_time.append(
+                arr[i + 2, 0]
+                + (arr[i + 2, 1] << 8)
+                + (arr[i + 1, 0] << 16)
+                + arr[i + 1, 1]
+                << 24
+            )
             i += 3
         elif anntype in [60, 61, 62]:
             pass
@@ -248,26 +254,27 @@ def rdann(record, annotator, start=0, end=-1, types=[]):
     # last values are EOF indicator
     annot_time = annot_time[:-1]
     annot = annot[:-1]
-    
+
     # annot_time should be total elapsed samples
     annot_time = numpy.cumsum(annot_time)
-    annot_time_ms = annot_time / info['samp_freq'] # in seconds
-    
+    annot_time_ms = annot_time / info["samp_freq"]  # in seconds
+
     # limit to requested interval
     start, end = _get_read_limits(start, end, -1, info)
     ann = numpy.array([annot_time, annot_time_ms, annot]).transpose()
-    
+
     # filter by annot_time in interval
-    ann =  ann[start <= ann[:, 0]]
+    ann = ann[start <= ann[:, 0]]
     ann = ann[ann[:, 0] <= end]
 
     # filter by type
     if types != []:
         ann = ann[numpy.logical_or.reduce([ann[:, 2] == x for x in types])]
-        #ann = ann[numpy.array([ann[x, 2] in types for x in range(len(ann))])]
+        # ann = ann[numpy.array([ann[x, 2] in types for x in range(len(ann))])]
 
     return ann
-    
+
+
 def plot_data(data, info, ann=None):
     """
     Plot the signal with annotations if available.
@@ -292,27 +299,27 @@ def plot_data(data, info, ann=None):
     except ImportError:
         warnings.warn("Could not import pylab. Abandoning plotting")
         return
-        
-    time = data[:, 1] #in seconds. use data[:, 0] to use sample no.
+
+    time = data[:, 1]  # in seconds. use data[:, 0] to use sample no.
     sig1 = data[:, 2]
     sig2 = data[:, 3]
-    
+
     pylab.subplot(211)
-    pylab.plot(time, sig1, 'k')
+    pylab.plot(time, sig1, "k")
     pylab.xticks([])
-    pylab.ylabel('%s (mV)' %(info['signal_names'][0]))
-    
+    pylab.ylabel("%s (mV)" % (info["signal_names"][0]))
+
     pylab.subplot(212)
-    pylab.plot(time, sig2, 'k')
-    pylab.ylabel('%s (mV)' %(info['signal_names'][1])) 
-    pylab.xlabel('Time (seconds)')
+    pylab.plot(time, sig2, "k")
+    pylab.ylabel("%s (mV)" % (info["signal_names"][1]))
+    pylab.xlabel("Time (seconds)")
 
     if ann != None:
         # annotation time in samples from start
-        ann_x = (ann[:, 0] - data[0, 0]).astype('int')
-        pylab.plot(ann[:, 1], data[ann_x, 3], 'xr')
+        ann_x = (ann[:, 0] - data[0, 0]).astype("int")
+        pylab.plot(ann[:, 1], data[ann_x, 3], "xr")
         pylab.subplot(211)
-        pylab.plot(ann[:, 1], data[ann_x, 2], 'xr')
+        pylab.plot(ann[:, 1], data[ann_x, 2], "xr")
 
     pylab.show()
 
@@ -341,88 +348,122 @@ def rdhdr(record):
           'gains' - Gain for each signal
           'zero_values' - Zero value for each signal
           'signal_names' - Name/Descr for each signal
-    
-    """
-    info = {'signal_names':[], 'gains':[], 'units':[],
-            'first_values':[], 'zero_values':[]}
-    
-    RECORD_REGEX = re.compile(r''.join([
-            "(?P<record>\d+)\/*(?P<seg_ct>\d*)\s", 
-            "(?P<sig_ct>\d+)\s*",
-            "(?P<samp_freq>\d*)\/?(?P<counter_freq>\d*)\(?(?P<base_counter>\d*)\)?\s*",
-            "(?P<samp_count>\d*)\s*",
-            "(?P<base_time>\d{,2}:*\d{,2}:*\d{,2})\s*",
-            "(?P<base_date>\d{,2}\/*\d{,2}\/*\d{,4})"]))
 
-    SIGNAL_REGEX = re.compile(r''.join([
-            "(?P<file_name>[0-9a-zA-Z\._/-]+)\s+",
-            "(?P<format>\d+)x{,1}(?P<samp_per_frame>\d*):*",
-            "(?P<skew>\d*)\+*(?P<byte_offset>\d*)\s*",
-            "(?P<adc_gain>\d*)\(?(?P<baseline>\d*)\)?\/?",
-            "(?P<units>\w*)\s*(?P<resolution>\d*)\s*",
-            "(?P<adc_zero>\d*)\s*(?P<init_value>[\d-]*)\s*",
-            "(?P<checksum>[0-9-]*)\s*(?P<block_size>\d*)\s*",
-            "(?P<description>[a-zA-Z0-9\s]*)"]))
+    """
+    info = {
+        "signal_names": [],
+        "gains": [],
+        "units": [],
+        "first_values": [],
+        "zero_values": [],
+    }
+
+    RECORD_REGEX = re.compile(
+        r"".join(
+            [
+                "(?P<record>\d+)\/*(?P<seg_ct>\d*)\s",
+                "(?P<sig_ct>\d+)\s*",
+                "(?P<samp_freq>\d*)\/?(?P<counter_freq>\d*)\(?(?P<base_counter>\d*)\)?\s*",
+                "(?P<samp_count>\d*)\s*",
+                "(?P<base_time>\d{,2}:*\d{,2}:*\d{,2})\s*",
+                "(?P<base_date>\d{,2}\/*\d{,2}\/*\d{,4})",
+            ]
+        )
+    )
+
+    SIGNAL_REGEX = re.compile(
+        r"".join(
+            [
+                "(?P<file_name>[0-9a-zA-Z\._/-]+)\s+",
+                "(?P<format>\d+)x{,1}(?P<samp_per_frame>\d*):*",
+                "(?P<skew>\d*)\+*(?P<byte_offset>\d*)\s*",
+                "(?P<adc_gain>\d*)\(?(?P<baseline>\d*)\)?\/?",
+                "(?P<units>\w*)\s*(?P<resolution>\d*)\s*",
+                "(?P<adc_zero>\d*)\s*(?P<init_value>[\d-]*)\s*",
+                "(?P<checksum>[0-9-]*)\s*(?P<block_size>\d*)\s*",
+                "(?P<description>[a-zA-Z0-9\s]*)",
+            ]
+        )
+    )
 
     header_lines, comment_lines = _getheaderlines(record)
-    (record_name, seg_count, signal_count, samp_freq,
-     counter_freq, base_counter, samp_count,
-     base_time, base_date) = RECORD_REGEX.findall(header_lines[0])[0]
+    (
+        record_name,
+        seg_count,
+        signal_count,
+        samp_freq,
+        counter_freq,
+        base_counter,
+        samp_count,
+        base_time,
+        base_date,
+    ) = RECORD_REGEX.findall(header_lines[0])[0]
 
     # use 250 if missing
-    if samp_freq == '':
+    if samp_freq == "":
         samp_freq = 250
-    if samp_count == '':
+    if samp_count == "":
         samp_count = 0
-        
-        
-    info['samp_freq'] = float(samp_freq)
-    info['samp_count'] = int(samp_count)
-    
+
+    info["samp_freq"] = float(samp_freq)
+    info["samp_count"] = int(samp_count)
+
     for sig in range(2):
-        (file_name, file_format, samp_per_frame, skew,
-         byte_offset, gain, baseline, units,
-         resolution, zero_value, first_value,
-         checksum, blocksize, signal_name) = SIGNAL_REGEX.findall(
-                                             header_lines[sig+1])[0]
+        (
+            file_name,
+            file_format,
+            samp_per_frame,
+            skew,
+            byte_offset,
+            gain,
+            baseline,
+            units,
+            resolution,
+            zero_value,
+            first_value,
+            checksum,
+            blocksize,
+            signal_name,
+        ) = SIGNAL_REGEX.findall(header_lines[sig + 1])[0]
 
         # replace with defaults for missing values
-        if gain == '' or gain == 0:
+        if gain == "" or gain == 0:
             gain = 200
-        if units == '':
-            units = 'mV'
-        if zero_value == '':
+        if units == "":
+            units = "mV"
+        if zero_value == "":
             zero_value = 0
-        if first_value == '':
-            first_value = 0   # do not use to check
-        
-        info['gains'].append(float(gain))
-        info['units'].append(units)
-        info['zero_values'].append(float(zero_value))
-        info['first_values'].append(float(first_value))
-        info['signal_names'].append(signal_name)
+        if first_value == "":
+            first_value = 0  # do not use to check
+
+        info["gains"].append(float(gain))
+        info["units"].append(units)
+        info["zero_values"].append(float(zero_value))
+        info["first_values"].append(float(first_value))
+        info["signal_names"].append(signal_name)
 
     return info
-        
+
+
 def _getheaderlines(record):
     """Read the header file and separate comment lines
     and header lines"""
-    hfile = record + '.hea'
-    all_lines = open(hfile, 'r').readlines()
+    hfile = record + ".hea"
+    all_lines = open(hfile, "r").readlines()
     comment_lines = []
     header_lines = []
     # strip newlines
-    all_lines = [l.rstrip('\n').rstrip('\r') for l in all_lines]
+    all_lines = [l.rstrip("\n").rstrip("\r") for l in all_lines]
     # comments
     for l in all_lines:
-        if l.startswith('#'):
+        if l.startswith("#"):
             comment_lines.append(l)
-        elif l.strip() != '':
+        elif l.strip() != "":
             header_lines.append(l)
-    
+
     return header_lines, comment_lines
 
-    
+
 def _get_read_limits(start, end, interval, info):
     """
     Given start time, end time and interval
@@ -444,73 +485,76 @@ def _get_read_limits(start, end, interval, info):
     >>> _get_read_limits(-1, -1, -1, {'samp_count':100, 'samp_freq':10})
     (0, 100)
     """
-    start *= info['samp_freq']
-    end *= info['samp_freq']
-    
-    if start < 0:         # If start is negative, start at 0
+    start *= info["samp_freq"]
+    end *= info["samp_freq"]
+
+    if start < 0:  # If start is negative, start at 0
         start = 0
-    if end < 0:           # if end is negative, use end of record
-        end = info['samp_count']
-    if end < start:       # if end is before start, swap them
+    if end < 0:  # if end is negative, use end of record
+        end = info["samp_count"]
+    if end < start:  # if end is before start, swap them
         start, end = end, start
-    interval_end = start + interval * info['samp_freq'] # end det by interval
+    interval_end = start + interval * info["samp_freq"]  # end det by interval
     if interval_end < start:
-        interval_end = info['samp_count']
-    end = min(end, interval_end, info['samp_count']) # use earlier end
+        interval_end = info["samp_count"]
+    end = min(end, interval_end, info["samp_count"])  # use earlier end
     return int(start), int(end)
-            
+
+
 def _read_data(record, start, end, info):
     """Read the binary data for each signal"""
-    datfile = record + '.dat'
+    datfile = record + ".dat"
     samp_to_read = end - start
 
     # verify against first value in header
-    with open(datfile, 'rb') as f:
-        data = _arr_to_data(numpy.fromstring(f.read(3),
-                        dtype=numpy.uint8).reshape(1,3))
+    with open(datfile, "rb") as f:
+        data = _arr_to_data(
+            numpy.fromstring(f.read(3), dtype=numpy.uint8).reshape(1, 3)
+        )
 
-    if [data[0, 2], data[0, 3]] != info['first_values']:
-        warnings.warn(
-            'First value from dat file does not match value in header')
-    
+    if [data[0, 2], data[0, 3]] != info["first_values"]:
+        warnings.warn("First value from dat file does not match value in header")
+
     # read into an array with 3 bytes in each row
-    with open(datfile, 'rb') as f:
-        f.seek(start*3)
-        arr = numpy.fromstring(f.read(3*samp_to_read),
-                dtype=numpy.uint8).reshape((samp_to_read, 3))
+    with open(datfile, "rb") as f:
+        f.seek(start * 3)
+        arr = numpy.fromstring(f.read(3 * samp_to_read), dtype=numpy.uint8).reshape(
+            (samp_to_read, 3)
+        )
 
     data = _arr_to_data(arr)
 
     # adjust zerovalue and gain
-    data[:, 2] = (data[:, 2] - info['zero_values'][0]) / info['gains'][0]
-    data[:, 3] = (data[:, 3] - info['zero_values'][1]) / info['gains'][1]
+    data[:, 2] = (data[:, 2] - info["zero_values"][0]) / info["gains"][0]
+    data[:, 3] = (data[:, 3] - info["zero_values"][1]) / info["gains"][1]
 
     # time columns
     data[:, 0] = numpy.arange(start, end)  # elapsed time in samples
-    data[:, 1] = (numpy.arange(samp_to_read) + start
-                  ) / info['samp_freq'] # in sec
+    data[:, 1] = (numpy.arange(samp_to_read) + start) / info["samp_freq"]  # in sec
     return data
+
 
 def _arr_to_data(arr):
     """From the numpy array read from the dat file
     using bit level operations, extract the 12-bit data"""
-    second_col = arr[:, 1].astype('int')
-    bytes1 = second_col & 15 # bytes belonging to first sample
-    bytes2 = second_col >> 4 # belongs to second sample
-    sign1 = (second_col & 8) << 9 # sign bit for first sample
-    sign2 = (second_col & 128) << 5 # sign bit for second sample
+    second_col = arr[:, 1].astype("int")
+    bytes1 = second_col & 15  # bytes belonging to first sample
+    bytes2 = second_col >> 4  # belongs to second sample
+    sign1 = (second_col & 8) << 9  # sign bit for first sample
+    sign2 = (second_col & 128) << 5  # sign bit for second sample
     # data has columns - samples, time(ms), signal1 and signal2
-    data = numpy.zeros((arr.shape[0], 4), dtype='float')
+    data = numpy.zeros((arr.shape[0], 4), dtype="float")
     data[:, 2] = (bytes1 << 8) + arr[:, 0] - sign1
     data[:, 3] = (bytes2 << 8) + arr[:, 2] - sign2
     return data
+
 
 def get_annotation_code(code=None):
     """Returns the symbolic definition for the wfdb annotation code.
 
     See http://www.physionet.org/physiotools/wpg/wpg_31.htm for details.
     Based on ecgcodes.h from wfdb.
-    
+
     Parameters
     ----------
     code : int
@@ -524,14 +568,16 @@ def get_annotation_code(code=None):
     """
     return CODEDICT[code]
 
+
 def main():
     """Run tests when called directly"""
     import nose
+
     print("-----------------")
     print("Running the tests")
     print("-----------------")
     nose.main()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
-        

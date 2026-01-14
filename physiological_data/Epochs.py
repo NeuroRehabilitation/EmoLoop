@@ -7,7 +7,7 @@ def getMarkers(marker, timestamps):
     category, onset, offset = list(), list(), list()
 
     for timestamp, markers in zip(timestamps, marker):
-        if markers[1] == '1':
+        if markers[1] == "1":
             offset.append(timestamp)
         elif markers[0] == "end":
             offset.append(timestamp)

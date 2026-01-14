@@ -1,9 +1,10 @@
-
 import numpy as np
 from scipy.signal import decimate
 
 
-def peak_detector_Resp(signal, fs, window=20, x_threshold=.3, prominence_threshold=.1):
+def peak_detector_Resp(
+    signal, fs, window=20, x_threshold=0.3, prominence_threshold=0.1
+):
     if fs > 50:
         signal = decimate(signal, int(fs / 50))
         fs /= int(fs / 50)
@@ -24,7 +25,7 @@ def peak_detector_Resp(signal, fs, window=20, x_threshold=.3, prominence_thresho
     index = 0
 
     for i in range(0, len(signal)):
-        print(f"{i * 100 / len(signal):.2f}%", end='\r')
+        print(f"{i * 100 / len(signal):.2f}%", end="\r")
         old_has_peak = has_peak
 
         if len(win) >= win_size:
@@ -54,7 +55,11 @@ def peak_detector_Resp(signal, fs, window=20, x_threshold=.3, prominence_thresho
                 valley_value = value
 
             if len(peaks[1]) > 0:
-                if old_has_peak != has_peak and not has_peak and peak_value - peaks[1][-1] > prominence:
+                if (
+                    old_has_peak != has_peak
+                    and not has_peak
+                    and peak_value - peaks[1][-1] > prominence
+                ):
                     peaks[0].append(peak_index)
                     peak_value = -np.inf
 
@@ -67,13 +72,15 @@ def peak_detector_Resp(signal, fs, window=20, x_threshold=.3, prominence_thresho
     return peaks, signal[peaks[0]]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from biosignals import Devices
     import matplotlib.pyplot as plt
 
-    device = Devices(r'..\..\acquisitions\Acquisitions\03_11_2020')
-    data = device.getSensorsData(['RESPIRATION'])
-    signal = device.convertAndfilterSignal(data['data'][:, 1], 'RESPIRATION', device.fs, device.resolution)
+    device = Devices(r"..\..\acquisitions\Acquisitions\03_11_2020")
+    data = device.getSensorsData(["RESPIRATION"])
+    signal = device.convertAndfilterSignal(
+        data["data"][:, 1], "RESPIRATION", device.fs, device.resolution
+    )
 
     peaks, _ = peak_detector_Resp(signal, device.fs)
 
@@ -81,5 +88,5 @@ if __name__ == '__main__':
 
     plt.figure()
     plt.plot(signal, zorder=-1)
-    plt.scatter(peaks[0], signal[peaks[0]], c='r', marker='x', zorder=1)
+    plt.scatter(peaks[0], signal[peaks[0]], c="r", marker="x", zorder=1)
     plt.show()

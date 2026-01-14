@@ -9,15 +9,13 @@ import pylab
 from numpy import array, clip, argsort, sort
 
 
-#from scipy.signal import argrelmax
+# from scipy.signal import argrelmax
 
 #### FROM SCIPY
 #### Given that the new version failed to compile in some linux versions
 
 
-
-def _boolrelextrema(data, comparator,
-                  axis=0, order=1, mode='clip'):
+def _boolrelextrema(data, comparator, axis=0, order=1, mode="clip"):
     """
     Calculate the relative extrema of `data`.
 
@@ -56,8 +54,8 @@ def _boolrelextrema(data, comparator,
     array([False, False,  True, False, False], dtype=bool)
 
     """
-    if((int(order) != order) or (order < 1)):
-        raise ValueError('Order must be an int >= 1')
+    if (int(order) != order) or (order < 1):
+        raise ValueError("Order must be an int >= 1")
 
     datalen = data.shape[axis]
     locs = np.arange(0, datalen)
@@ -69,12 +67,12 @@ def _boolrelextrema(data, comparator,
         minus = data.take(locs - shift, axis=axis, mode=mode)
         results &= comparator(main, plus)
         results &= comparator(main, minus)
-        if(~results.any()):
+        if ~results.any():
             return results
     return results
 
 
-def argrelmin(data, axis=0, order=1, mode='clip'):
+def argrelmin(data, axis=0, order=1, mode="clip"):
     """
     Calculate the relative minima of `data`.
 
@@ -112,7 +110,7 @@ def argrelmin(data, axis=0, order=1, mode='clip'):
     return argrelextrema(data, np.less, axis, order, mode)
 
 
-def argrelmax(data, axis=0, order=1, mode='clip'):
+def argrelmax(data, axis=0, order=1, mode="clip"):
     """
     Calculate the relative maxima of `data`.
 
@@ -150,7 +148,7 @@ def argrelmax(data, axis=0, order=1, mode='clip'):
     return argrelextrema(data, np.greater, axis, order, mode)
 
 
-def argrelextrema(data, comparator, axis=0, order=1, mode='clip'):
+def argrelextrema(data, comparator, axis=0, order=1, mode="clip"):
     """
     Calculate the relative extrema of `data`.
 
@@ -184,20 +182,18 @@ def argrelextrema(data, comparator, axis=0, order=1, mode='clip'):
     argrelmin, argrelmax
 
     """
-    results = _boolrelextrema(data, comparator,
-                              axis, order, mode)
+    results = _boolrelextrema(data, comparator, axis, order, mode)
     if ~results.any():
         return (np.array([]),) * 2
     else:
         return np.where(results)
 
 
-#### FROM SCIPY 
-
+#### FROM SCIPY
 
 
 def peaks(signal, tol=None):
-    """ This function detects all the peaks of a signal and returns those time
+    """This function detects all the peaks of a signal and returns those time
     positions. To reduce the amount of peaks detected, a threshold is
     introduced so only the peaks above that value are considered.
 
@@ -225,24 +221,24 @@ def peaks(signal, tol=None):
     array([], dtype=int32)
     """
 
-    if (tol is None):
+    if tol is None:
         tol = min(signal)
     pks = argrelmax(clip(signal, tol, signal.max()))
     return pks[0]
 
 
 def post_peak(v, v_post):
-    """ Detects the next peak """
+    """Detects the next peak"""
     return array([v_post[find(v_post > i)[0]] for i in v])
 
 
 def prior_peak(v, v_prior):
-    """ Detects the previous peak """
+    """Detects the previous peak"""
     return array([v_prior[find(v_prior < i)[-1]] for i in v])
 
 
 def clean_near_peaks(signal, peaks_, min_distance):
-    """ Given an array with all the peaks of the signal ('peaks') and a
+    """Given an array with all the peaks of the signal ('peaks') and a
     distance value ('min_distance') and the signal, by argument, this function
     erases all the unnecessary peaks and returns an array with only the maximum
     peak for each period of the signal (the period is given by the
@@ -265,15 +261,15 @@ def clean_near_peaks(signal, peaks_, min_distance):
     See also: clean_near_events()
     """
 
-    #order all peaks
-    
+    # order all peaks
+
     ars = argsort(signal[peaks_])
-    
+
     pp = peaks(ars)
 
     fp = []
 
-    #clean near peaks
+    # clean near peaks
     while len(pp) > 0:
         fp += [pp[-1]]
         pp = pp[abs(pp - pp[-1]) > min_distance]
@@ -282,7 +278,7 @@ def clean_near_peaks(signal, peaks_, min_distance):
 
 
 def clean_near_events(points, min_distance):
-    """ Given an array with some specific points of the signal and a distance
+    """Given an array with some specific points of the signal and a distance
     value, this function erases all the surplus points and returns an array
     with only one point (the first point) per distance samples values
 
@@ -312,24 +308,26 @@ def clean_near_events(points, min_distance):
         points = points[abs(points - points[0]) > min_distance]
 
     return array(fp)
-    
+
+
 from numpy import ceil
 
-def bigPeaks(s,th,min_peak_distance=5,peak_return_percentage=0.1):
-    p=peaks(s,th)
-    pp=[]
-    if len(p)==0:
-        pp=[]
+
+def bigPeaks(s, th, min_peak_distance=5, peak_return_percentage=0.1):
+    p = peaks(s, th)
+    pp = []
+    if len(p) == 0:
+        pp = []
     else:
-        p=clean_near_peaks(s,p,min_peak_distance)
-    
-        if len(p)!=0:
-            ars=argsort(s[p])
-            pp=p[ars]
-            
-            num_peaks_to_return=ceil(len(p)*peak_return_percentage)
-            
-            pp=pp[-num_peaks_to_return:]
+        p = clean_near_peaks(s, p, min_peak_distance)
+
+        if len(p) != 0:
+            ars = argsort(s[p])
+            pp = p[ars]
+
+            num_peaks_to_return = ceil(len(p) * peak_return_percentage)
+
+            pp = pp[-num_peaks_to_return:]
         else:
-            pp==[]
+            pp == []
     return pp
