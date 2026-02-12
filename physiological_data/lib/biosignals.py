@@ -8,7 +8,6 @@ from json import loads
 import biosignalsnotebooks as bsnb
 import abc
 
-
 END_BASELINE = "End of Baseline"
 BEGIN_BASELINE = "Begin of Baseline"
 N_BACK = "N-back"
