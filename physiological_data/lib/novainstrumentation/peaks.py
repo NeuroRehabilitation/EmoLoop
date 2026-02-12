@@ -8,7 +8,6 @@ import numpy as np
 import pylab
 from numpy import array, clip, argsort, sort
 
-
 # from scipy.signal import argrelmax
 
 #### FROM SCIPY

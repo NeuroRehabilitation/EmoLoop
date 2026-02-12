@@ -49,10 +49,8 @@ def smooth(input_signal, window_len=10, window="hanning"):
         return input_signal
 
     if window not in ["flat", "hanning", "hamming", "bartlett", "blackman"]:
-        raise ValueError(
-            """Window is on of 'flat', 'hanning', 'hamming',
-'bartlett', 'blackman'"""
-        )
+        raise ValueError("""Window is on of 'flat', 'hanning', 'hamming',
+'bartlett', 'blackman'""")
 
     sig = numpy.r_[
         2 * input_signal[0] - input_signal[window_len:0:-1],
