@@ -3,7 +3,9 @@
 import numpy as np
 
 from novainstrumentation.panthomkins.butterworth_filters import butter_bandpass_filter
-from novainstrumentation.panthomkins.detect_panthomkins_peaks import detect_panthomkins_peaks
+from novainstrumentation.panthomkins.detect_panthomkins_peaks import (
+    detect_panthomkins_peaks,
+)
 from novainstrumentation.panthomkins.rr_update import rr_1_update, rr_2_update, sync
 
 
@@ -17,7 +19,7 @@ def panthomkins(ecg_signal, fs, butterlow=8, butterhigh=30):
     ecg_filter = butter_bandpass_filter(ecg, butterlow, butterhigh, fs)
 
     # Squaring
-    ecg_filter = 50.0 * ecg_filter ** 2.0
+    ecg_filter = 50.0 * ecg_filter**2.0
 
     # Find Peaks
     pksInd = detect_panthomkins_peaks(ecg_filter, mpd=35)
@@ -89,17 +91,18 @@ def panthomkins(ecg_signal, fs, butterlow=8, butterhigh=30):
         if NFound_Old != NFound - 1:
             rr_1, rr_average_1 = rr_1_update(rr_1, NFound - 1, Found)
             rr_2, rr_average_2, flag, rr_low_limit, rr_high_limit = rr_2_update(
-                rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit)
+                rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit
+            )
 
             NFound_Old = NFound - 1
 
-            #if np.mod(NFound, 8) == 0:
-                #print(['Average of the 8 most recent HR is ',
-                       #str(rr_average_1 / fs * 60.0), ' (BPM)'])
-                #print('')
+            # if np.mod(NFound, 8) == 0:
+            # print(['Average of the 8 most recent HR is ',
+            # str(rr_average_1 / fs * 60.0), ' (BPM)'])
+            # print('')
 
         if flag:
-            print('Gap Found')
+            print("Gap Found")
 
             flag = 0
             back = ii

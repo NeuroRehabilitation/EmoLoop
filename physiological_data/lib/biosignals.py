@@ -8,7 +8,6 @@ from json import loads
 import biosignalsnotebooks as bsnb
 import abc
 
-
 END_BASELINE = "End of Baseline"
 BEGIN_BASELINE = "Begin of Baseline"
 N_BACK = "N-back"
@@ -65,22 +64,20 @@ class Devices:
     def convertAndfilterSignal(data, sensor, fs, resolution):
         if sensor == "ECG":
             low_f, high_f = 5, 15
-            data = ((data / (2 ** resolution)) - 1 / 2) * 3000 / 1019  # millivolts
+            data = ((data / (2**resolution)) - 1 / 2) * 3000 / 1019  # millivolts
         elif sensor == "hSpO2":
             low_f, high_f = 0.05, 1
-            data = (0.15 * data) / (2 ** resolution)  # microAmpere
+            data = (0.15 * data) / (2**resolution)  # microAmpere
         elif sensor == "EDA":
             low_f, high_f = 0.016, 35
-            data = 1e6 * (data / (2 ** resolution)) * 3 / 0.12  # microSiemens
+            data = 1e6 * (data / (2**resolution)) * 3 / 0.12  # microSiemens
         elif sensor == "EEG":
             # CONFIRM
             low_f, high_f = 1, 30
-            data = (
-                1e6 * (data / ((2 ** resolution) - 1) - 0.5) * 3 / 40000
-            )  # microVolts
+            data = 1e6 * (data / ((2**resolution) - 1) - 0.5) * 3 / 40000  # microVolts
         elif sensor == "RESPIRATION":
             low_f, high_f = 0.01, 1
-            data = ((data / (2 ** resolution)) - 1 / 2) * 100  # % of displacement
+            data = ((data / (2**resolution)) - 1 / 2) * 100  # % of displacement
         elif sensor == "XYZ":
             # CONFIRM - Movements happening at more than 1 per second is very unlikely...
             low_f, high_f = 0.01, 10

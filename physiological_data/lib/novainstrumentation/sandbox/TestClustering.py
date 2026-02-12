@@ -1,201 +1,260 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-from sklearn.cluster import MiniBatchKMeans, KMeans, SpectralClustering, DBSCAN, AgglomerativeClustering, \
-    AffinityPropagation
+from sklearn.cluster import (
+    MiniBatchKMeans,
+    KMeans,
+    SpectralClustering,
+    DBSCAN,
+    AgglomerativeClustering,
+    AffinityPropagation,
+)
 from sklearn.neighbors import kneighbors_graph
 from sklearn.preprocessing import StandardScaler
 
 
-def MultiDimensionalClusteringKmeans(Xmatrix, time, xdata, n_clusters=2, ax = None, show=False):
+def MultiDimensionalClusteringKmeans(
+    Xmatrix, time, xdata, n_clusters=2, ax=None, show=False
+):
 
-	seed = np.random.seed(0)
-	colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
-	colors = np.hstack([colors] * 20)
+    seed = np.random.seed(0)
+    colors = np.array([x for x in "bgrcmykbgrcmykbgrcmykbgrcmyk"])
+    colors = np.hstack([colors] * 20)
 
-	#normalize dataset for easier parameter selection
-	X = StandardScaler().fit_transform(Xmatrix)
+    # normalize dataset for easier parameter selection
+    X = StandardScaler().fit_transform(Xmatrix)
 
-	#algorithm KMeans
-	kmeans = KMeans(n_clusters=n_clusters, random_state=seed)
+    # algorithm KMeans
+    kmeans = KMeans(n_clusters=n_clusters, random_state=seed)
 
-	#Apply algorithm
-	kmeans.fit(X)
+    # Apply algorithm
+    kmeans.fit(X)
 
-	y_pred = kmeans.labels_.astype(np.int)
-	centers = kmeans.cluster_centers_
-	center_colors = colors[:len(centers)]
+    y_pred = kmeans.labels_.astype(np.int)
+    centers = kmeans.cluster_centers_
+    center_colors = colors[: len(centers)]
 
-	#Representation
+    # Representation
 
-	if np.logical_and(show, ax != None):
+    if np.logical_and(show, ax != None):
 
-		ax.set_title('Clustering Tech: ' + "KMEANS; " + 'Number of Clusters = ' + str(n_clusters), fontsize=15)
+        ax.set_title(
+            "Clustering Tech: "
+            + "KMEANS; "
+            + "Number of Clusters = "
+            + str(n_clusters),
+            fontsize=15,
+        )
 
-		ax.plot(time, xdata, color='lightgray', alpha=0.4)
-		ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		ax.set_xlabel("time (ms)")
-		ax.set_ylabel("Amplitude")
+        ax.plot(time, xdata, color="lightgray", alpha=0.4)
+        ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        ax.set_xlabel("time (ms)")
+        ax.set_ylabel("Amplitude")
 
-		return X, y_pred, centers, center_colors
+        return X, y_pred, centers, center_colors
 
-		# fig = plt.figure(5, figsize=(4, 3))
-		# plt.clf()
-		# ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
-		# plt.cla()
-		#
-		# ax.scatter(X[:, 2], X[:, 0], X[:, 1], color=colors[y_pred].tolist())
+        # fig = plt.figure(5, figsize=(4, 3))
+        # plt.clf()
+        # ax = Axes3D(fig, rect=[0, 0, .95, 1], elev=48, azim=134)
+        # plt.cla()
+        #
+        # ax.scatter(X[:, 2], X[:, 0], X[:, 1], color=colors[y_pred].tolist())
 
-	elif np.logical_and(show, ax == None):
-		fig, axis = plt.subplots(2,1)
-		fig.tight_layout()
-		axis[0].set_title('Clustering Tech: ' + "KMEANS; " + 'Number of Clusters = ' + str(n_clusters), fontsize=15)
-		axis[0].plot(time, xdata, color='lightgray', alpha=0.4)
-		axis[0].scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		axis[0].set_xlabel("time (ms)")
-		axis[0].set_ylabel("Amplitude")
-		axis[1].plot(y_pred)
+    elif np.logical_and(show, ax == None):
+        fig, axis = plt.subplots(2, 1)
+        fig.tight_layout()
+        axis[0].set_title(
+            "Clustering Tech: "
+            + "KMEANS; "
+            + "Number of Clusters = "
+            + str(n_clusters),
+            fontsize=15,
+        )
+        axis[0].plot(time, xdata, color="lightgray", alpha=0.4)
+        axis[0].scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        axis[0].set_xlabel("time (ms)")
+        axis[0].set_ylabel("Amplitude")
+        axis[1].plot(y_pred)
 
-		return X, y_pred, centers, center_colors
+        return X, y_pred, centers, center_colors
 
-	else:
+    else:
 
-		return X, y_pred, centers, center_colors
-
-
-def MultiDimensionalClusteringSPCL(Xmatrix, time, xdata, eigen_solver = 'arpack', n_clusters=2, ax = None, show=False):
-
-	seed = np.random.seed(0)
-	colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
-	colors = np.hstack([colors] * 20)
-
-	# normalize dataset for easier parameter selection
-	X = StandardScaler().fit_transform(Xmatrix)
-	# algorithm SpectralClustering
-	SC = SpectralClustering(n_clusters=n_clusters, eigen_solver=eigen_solver, affinity="nearest_neighbors")
-
-	# Apply algorithm
-	fit = SC.fit(X)
-
-	y_pred = fit.labels_.astype(np.int)
-
-	# Representation
-	if np.logical_and(show, ax == None):
-
-		ax.set_title('Clustering Tech: ' + "SpectralClustering; " + 'Number of Clusters = ' + str(n_clusters), fontsize=15)
-		ax.plot(time, xdata, color='lightgray', alpha=0.4)
-		ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		ax.set_xlabel("time (ms)")
-		ax.set_ylabel("Amplitude")
-
-		return X, y_pred
-
-	elif np.logical_and(show, ax == None):
-
-		fig, axis = plt.subplots(1, 1)
-		fig.tight_layout()
-		axis.plot(time, xdata, color='lightgray', alpha=0.4)
-		axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		axis.set_xlabel("time (ms)")
-		axis.set_ylabel("Amplitude")
-
-		return X, y_pred
-
-	else:
-		return X, y_pred
-
-def MultiDimensionalClusteringAGG(Xmatrix, time, xdata, n_clusters=2, Linkage = 'ward', Affinity = 'euclidean', ax = None, show=False):
-
-	# normalize dataset for easier parameter selection
-	X = StandardScaler().fit_transform(Xmatrix)
-
-	# connectivity matrix for structured Ward
-	connectivity = kneighbors_graph(X, n_neighbors=10, include_self=False)
-	# make connectivity symmetric
-	connectivity = 0.5 * (connectivity + connectivity.T)
-
-	seed = np.random.seed(0)
-	colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
-	colors = np.hstack([colors] * 20)
+        return X, y_pred, centers, center_colors
 
 
-	if(Linkage is 'ward'):
-		ward = AgglomerativeClustering(n_clusters=n_clusters, linkage='ward', connectivity=connectivity)
-		# Apply algorithm
-		fit = ward.fit(X)
-	else:
-		Agg = AgglomerativeClustering(n_clusters=n_clusters, linkage=Linkage, connectivity=connectivity, affinity=Affinity)
-		# Apply algorithm
-		fit = Agg.fit(X)
+def MultiDimensionalClusteringSPCL(
+    Xmatrix, time, xdata, eigen_solver="arpack", n_clusters=2, ax=None, show=False
+):
 
-	y_pred = fit.labels_.astype(np.int)
+    seed = np.random.seed(0)
+    colors = np.array([x for x in "bgrcmykbgrcmykbgrcmykbgrcmyk"])
+    colors = np.hstack([colors] * 20)
 
-	# Representation
-	if np.logical_and(show, ax != None):
+    # normalize dataset for easier parameter selection
+    X = StandardScaler().fit_transform(Xmatrix)
+    # algorithm SpectralClustering
+    SC = SpectralClustering(
+        n_clusters=n_clusters, eigen_solver=eigen_solver, affinity="nearest_neighbors"
+    )
 
-		ax.set_title('Clustering Tech: ' + "Agglomerative Clustering " + 'Number of Clusters = ' + str(n_clusters), fontsize=15)
-		ax.plot(time, xdata, color='lightgray', alpha=0.4)
-		ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		ax.set_xlabel("time (ms)")
-		ax.set_ylabel("Amplitude")
+    # Apply algorithm
+    fit = SC.fit(X)
 
-		return X, y_pred
+    y_pred = fit.labels_.astype(np.int)
 
-	elif np.logical_and(show, ax == None):
+    # Representation
+    if np.logical_and(show, ax == None):
 
-		fig, axis = plt.subplots(1, 1)
-		fig.tight_layout()
-		axis.set_title('Clustering Tech: ' + "Agglomerative Clustering " + 'Number of Clusters = ' + str(n_clusters), fontsize=15)
-		axis.plot(time, xdata, color='lightgray', alpha=0.4)
-		axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		axis.set_xlabel("time (ms)")
-		axis.set_ylabel("Amplitude")
+        ax.set_title(
+            "Clustering Tech: "
+            + "SpectralClustering; "
+            + "Number of Clusters = "
+            + str(n_clusters),
+            fontsize=15,
+        )
+        ax.plot(time, xdata, color="lightgray", alpha=0.4)
+        ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        ax.set_xlabel("time (ms)")
+        ax.set_ylabel("Amplitude")
 
-	else:
+        return X, y_pred
 
-		return X, y_pred
+    elif np.logical_and(show, ax == None):
+
+        fig, axis = plt.subplots(1, 1)
+        fig.tight_layout()
+        axis.plot(time, xdata, color="lightgray", alpha=0.4)
+        axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        axis.set_xlabel("time (ms)")
+        axis.set_ylabel("Amplitude")
+
+        return X, y_pred
+
+    else:
+        return X, y_pred
+
+
+def MultiDimensionalClusteringAGG(
+    Xmatrix,
+    time,
+    xdata,
+    n_clusters=2,
+    Linkage="ward",
+    Affinity="euclidean",
+    ax=None,
+    show=False,
+):
+
+    # normalize dataset for easier parameter selection
+    X = StandardScaler().fit_transform(Xmatrix)
+
+    # connectivity matrix for structured Ward
+    connectivity = kneighbors_graph(X, n_neighbors=10, include_self=False)
+    # make connectivity symmetric
+    connectivity = 0.5 * (connectivity + connectivity.T)
+
+    seed = np.random.seed(0)
+    colors = np.array([x for x in "bgrcmykbgrcmykbgrcmykbgrcmyk"])
+    colors = np.hstack([colors] * 20)
+
+    if Linkage is "ward":
+        ward = AgglomerativeClustering(
+            n_clusters=n_clusters, linkage="ward", connectivity=connectivity
+        )
+        # Apply algorithm
+        fit = ward.fit(X)
+    else:
+        Agg = AgglomerativeClustering(
+            n_clusters=n_clusters,
+            linkage=Linkage,
+            connectivity=connectivity,
+            affinity=Affinity,
+        )
+        # Apply algorithm
+        fit = Agg.fit(X)
+
+    y_pred = fit.labels_.astype(np.int)
+
+    # Representation
+    if np.logical_and(show, ax != None):
+
+        ax.set_title(
+            "Clustering Tech: "
+            + "Agglomerative Clustering "
+            + "Number of Clusters = "
+            + str(n_clusters),
+            fontsize=15,
+        )
+        ax.plot(time, xdata, color="lightgray", alpha=0.4)
+        ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        ax.set_xlabel("time (ms)")
+        ax.set_ylabel("Amplitude")
+
+        return X, y_pred
+
+    elif np.logical_and(show, ax == None):
+
+        fig, axis = plt.subplots(1, 1)
+        fig.tight_layout()
+        axis.set_title(
+            "Clustering Tech: "
+            + "Agglomerative Clustering "
+            + "Number of Clusters = "
+            + str(n_clusters),
+            fontsize=15,
+        )
+        axis.plot(time, xdata, color="lightgray", alpha=0.4)
+        axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        axis.set_xlabel("time (ms)")
+        axis.set_ylabel("Amplitude")
+
+    else:
+
+        return X, y_pred
+
 
 def MultiDimensionalClusteringDBSCAN(Xmatrix, time, xdata, eps, ax=None, show=False):
 
-	# normalize dataset for easier parameter selection
-	X = StandardScaler().fit_transform(Xmatrix)
+    # normalize dataset for easier parameter selection
+    X = StandardScaler().fit_transform(Xmatrix)
 
-	colors = np.array([x for x in 'bgrcmykbgrcmykbgrcmykbgrcmyk'])
-	colors = np.hstack([colors] * 20)
+    colors = np.array([x for x in "bgrcmykbgrcmykbgrcmykbgrcmyk"])
+    colors = np.hstack([colors] * 20)
 
-	# normalize dataset for easier parameter selection
-	dbscan = DBSCAN(eps=eps)
+    # normalize dataset for easier parameter selection
+    dbscan = DBSCAN(eps=eps)
 
-	# Apply algorithm
-	fit = dbscan.fit(X)
+    # Apply algorithm
+    fit = dbscan.fit(X)
 
-	y_pred = fit.labels_.astype(np.int)
+    y_pred = fit.labels_.astype(np.int)
 
-	# Representation
-	if np.logical_and(show, ax != None):
+    # Representation
+    if np.logical_and(show, ax != None):
 
-		ax.set_title('Clustering Tech: ' + "DBSCAN", fontsize=15)
+        ax.set_title("Clustering Tech: " + "DBSCAN", fontsize=15)
 
-		ax.plot(time, xdata, color='lightgray', alpha=0.4)
-		ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		ax.set_xlabel("time (ms)")
-		ax.set_ylabel("Amplitude")
+        ax.plot(time, xdata, color="lightgray", alpha=0.4)
+        ax.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        ax.set_xlabel("time (ms)")
+        ax.set_ylabel("Amplitude")
 
-		return X, y_pred
+        return X, y_pred
 
-	elif np.logical_and(show, ax == None):
-		fig, axis = plt.subplots(1, 1)
-		fig.tight_layout()
-		axis.set_title('Clustering Tech: ' + "DBSCAN", fontsize=15)
+    elif np.logical_and(show, ax == None):
+        fig, axis = plt.subplots(1, 1)
+        fig.tight_layout()
+        axis.set_title("Clustering Tech: " + "DBSCAN", fontsize=15)
 
-		axis.plot(time, xdata, color='lightgray', alpha=0.4)
-		axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
-		axis.set_xlabel("time (ms)")
-		axis.set_ylabel("Amplitude")
+        axis.plot(time, xdata, color="lightgray", alpha=0.4)
+        axis.scatter(time, xdata, color=colors[y_pred].tolist(), s=10)
+        axis.set_xlabel("time (ms)")
+        axis.set_ylabel("Amplitude")
 
-	else:
+    else:
 
-		return X, y_pred
+        return X, y_pred
 
 
 # def MultidimensionalClustering(FeaturesMatrix, Xarray, Yarray, n_clusters = 2, ClusteringMethod = 'kmeans', ax= None, show = False):

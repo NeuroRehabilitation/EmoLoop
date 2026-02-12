@@ -1,7 +1,7 @@
 import numpy
 
 
-def smooth(input_signal, window_len=10, window='hanning'):
+def smooth(input_signal, window_len=10, window="hanning"):
     """
     @brief: Smooth the data using a window with requested size.
 
@@ -48,19 +48,21 @@ def smooth(input_signal, window_len=10, window='hanning'):
     if window_len < 3:
         return input_signal
 
-    if window not in ['flat', 'hanning', 'hamming', 'bartlett', 'blackman']:
+    if window not in ["flat", "hanning", "hamming", "bartlett", "blackman"]:
         raise ValueError("""Window is on of 'flat', 'hanning', 'hamming',
 'bartlett', 'blackman'""")
 
-    sig = numpy.r_[2 * input_signal[0] - input_signal[window_len:0:-1],
-                input_signal,
-                2 * input_signal[-1] - input_signal[-2:-window_len-2:-1]]
+    sig = numpy.r_[
+        2 * input_signal[0] - input_signal[window_len:0:-1],
+        input_signal,
+        2 * input_signal[-1] - input_signal[-2 : -window_len - 2 : -1],
+    ]
 
-    if window == 'flat':  # moving average
-        win = numpy.ones(window_len, 'd')
+    if window == "flat":  # moving average
+        win = numpy.ones(window_len, "d")
     else:
-        win = eval('numpy.' + window + '(window_len)')
+        win = eval("numpy." + window + "(window_len)")
 
-    sig_conv = numpy.convolve(win / win.sum(), sig, mode='same')
+    sig_conv = numpy.convolve(win / win.sum(), sig, mode="same")
 
-    return sig_conv[window_len: -window_len]
+    return sig_conv[window_len:-window_len]

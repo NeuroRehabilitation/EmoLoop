@@ -43,8 +43,12 @@ def Load_Ratings(data, stream_name: str):
                     else:
                         arousal.append("High")
 
-        ratings = {"Valence": valence, "Arousal": arousal, "Valence Timestamps": valence_timestamps,
-                   "Arousal Timestamps": arousal_timestamps}
+        ratings = {
+            "Valence": valence,
+            "Arousal": arousal,
+            "Valence Timestamps": valence_timestamps,
+            "Arousal Timestamps": arousal_timestamps,
+        }
 
     return ratings
 

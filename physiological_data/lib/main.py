@@ -9,8 +9,8 @@ except (ImportError, ModuleNotFoundError):
 
 import matplotlib.pylab as plt
 
-psycho = Psycho(r'..\..\acquisitions\Acquisitions\11_12_2020_1\results_3.csv')
-device = Devices(r'..\..\acquisitions\Acquisitions\11_12_2020_1')
+psycho = Psycho(r"..\..\acquisitions\Acquisitions\11_12_2020_1\results_3.csv")
+device = Devices(r"..\..\acquisitions\Acquisitions\11_12_2020_1")
 
 timestamps = psycho.getTimestamps()
 labels = psycho.getActivity()

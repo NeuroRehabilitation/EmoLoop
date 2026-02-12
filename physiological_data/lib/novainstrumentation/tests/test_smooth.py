@@ -5,9 +5,10 @@ from novainstrumentation import smooth
 
 
 def test_symmetric_window():
-    x = arange(1., 11.)
-    sx = smooth(x, window_len=5, window='flat')
+    x = arange(1.0, 11.0)
+    sx = smooth(x, window_len=5, window="flat")
     assert_allclose(x, sx)
+
 
 if __name__ == "__main__":
     run_module_suite()

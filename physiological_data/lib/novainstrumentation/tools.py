@@ -7,7 +7,7 @@ from numpy import abs, linspace, sin, pi, int16
 
 
 def plotfft(s, fmax, doplot=False):
-    """ This functions computes the fft of a signal, returning the frequency
+    """This functions computes the fft of a signal, returning the frequency
     and their magnitude values.
 
     Parameters
@@ -30,15 +30,15 @@ def plotfft(s, fmax, doplot=False):
     fs = abs(np.fft.fft(s))
     f = linspace(0, fmax / 2, len(s) / 2)
     if doplot:
-        pl.plot(f[1:len(s) / 2], fs[1:len(s) / 2])
-    return (f[1:len(s) / 2].copy(), fs[1:len(s) / 2].copy())
+        pl.plot(f[1 : len(s) / 2], fs[1 : len(s) / 2])
+    return (f[1 : len(s) / 2].copy(), fs[1 : len(s) / 2].copy())
 
 
 def synthbeats2(duration, meanhr=60, stdhr=1, samplingfreq=250):
-    #Minimaly based on the parameters from:
-    #http://physionet.cps.unizar.es/physiotools/ecgsyn/Matlab/ecgsyn.m
-    #Inputs: duration in seconds
-    #Returns: signal, peaks
+    # Minimaly based on the parameters from:
+    # http://physionet.cps.unizar.es/physiotools/ecgsyn/Matlab/ecgsyn.m
+    # Inputs: duration in seconds
+    # Returns: signal, peaks
 
     ibi = 60 / float(meanhr) * samplingfreq
 
@@ -50,7 +50,7 @@ def synthbeats2(duration, meanhr=60, stdhr=1, samplingfreq=250):
 
     if peaks[-1] >= duration * samplingfreq:
         peaks = peaks[:-1]
-    peaks = peaks.astype('int')
+    peaks = peaks.astype("int")
     signal = np.zeros(duration * samplingfreq)
     signal[peaks] = 1.0
 
@@ -58,11 +58,11 @@ def synthbeats2(duration, meanhr=60, stdhr=1, samplingfreq=250):
 
 
 def synthbeats(duration, meanhr=60, stdhr=1, samplingfreq=250, sinfreq=None):
-    #Minimaly based on the parameters from:
-    #http://physionet.cps.unizar.es/physiotools/ecgsyn/Matlab/ecgsyn.m
-    #If freq exist it will be used to generate a sin instead of using rand
-    #Inputs: duration in seconds
-    #Returns: signal, peaks
+    # Minimaly based on the parameters from:
+    # http://physionet.cps.unizar.es/physiotools/ecgsyn/Matlab/ecgsyn.m
+    # If freq exist it will be used to generate a sin instead of using rand
+    # Inputs: duration in seconds
+    # Returns: signal, peaks
 
     t = np.arange(duration * samplingfreq) / float(samplingfreq)
     signal = np.zeros(len(t))
@@ -75,25 +75,26 @@ def synthbeats(duration, meanhr=60, stdhr=1, samplingfreq=250, sinfreq=None):
         npeaks = 1.2 * (duration * meanhr / 60)
         # add 20% more beats for some cummulative error
         hr = pl.randn(npeaks) * stdhr + meanhr
-        peaks = pl.cumsum(60. / hr) * samplingfreq
-        peaks = peaks.astype('int')
+        peaks = pl.cumsum(60.0 / hr) * samplingfreq
+        peaks = peaks.astype("int")
         peaks = peaks[peaks < t[-1] * samplingfreq]
 
     else:
         hr = meanhr + sin(2 * pi * t * sinfreq) * float(stdhr)
-        index = int(60. / hr[0] * samplingfreq)
+        index = int(60.0 / hr[0] * samplingfreq)
         peaks = []
         while index < len(t):
             peaks += [index]
-            index += int(60. / hr[index] * samplingfreq)
+            index += int(60.0 / hr[index] * samplingfreq)
 
     signal[peaks] = 1.0
 
     return t, signal, peaks
 
 
-def load_with_cache(file_, recache=False, sampling=1,
-                    columns=None, temp_dir='.', data_type='int16'):
+def load_with_cache(
+    file_, recache=False, sampling=1, columns=None, temp_dir=".", data_type="int16"
+):
     """@brief This function loads a file from the current directory and saves
     the cached file to later executions. It's also possible to make a recache
     or a subsampling of the signal and choose only a few columns of the signal,
@@ -113,9 +114,7 @@ def load_with_cache(file_, recache=False, sampling=1,
     TODO: receive a file handle
     """
 
-    
-    
-    cfile = '%s.npy' % file_
+    cfile = "%s.npy" % file_
 
     if (not path.exists(cfile)) or recache:
         if columns == None:
@@ -133,7 +132,5 @@ def load_data(filename):
     """
     :rtype : numpy matrix
     """
-    data = pandas.read_csv(filename, header=None, delimiter='\t', skiprows=9)
+    data = pandas.read_csv(filename, header=None, delimiter="\t", skiprows=9)
     return data.as_matrix()
-    
-

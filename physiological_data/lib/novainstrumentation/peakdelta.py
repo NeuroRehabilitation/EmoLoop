@@ -9,10 +9,10 @@ import sys
 
 from numpy import NaN, Inf, arange, isscalar, array, asarray
 
-
 ##############################################################################
 ########################### Peaks Detection ##################################
 ##############################################################################
+
 
 def peakdelta(v, delta, x=None):
     """
@@ -24,7 +24,7 @@ def peakdelta(v, delta, x=None):
     %        maxima and minima ("peaks") in the vector V.
     %        MAXTAB and MINTAB consists of two columns. Column 1
     %        contains indices in V, and column 2 the found values.
-    %      
+    %
     %        With [MAXTAB, MINTAB] = peakdelta(V, DELTA, X) the indices
     %        in MAXTAB and MINTAB are replaced with the corresponding
     %        X-values.
@@ -37,21 +37,21 @@ def peakdelta(v, delta, x=None):
     %        This function is released to the public domain; Any use is allowed.
     """
     maxtab = []
-    mintab = [] 
-    
+    mintab = []
+
     if x is None:
         x = arange(len(v))
-    
+
     v = asarray(v)
-    
+
     if len(v) != len(x):
-        sys.exit('Input vectors v and x must have same length')
+        sys.exit("Input vectors v and x must have same length")
 
     if not isscalar(delta):
-        sys.exit('Input argument delta must be a scalar')
+        sys.exit("Input argument delta must be a scalar")
 
     if delta <= 0:
-        sys.exit('Input argument delta must be positive')
+        sys.exit("Input argument delta must be positive")
 
     mn, mx = Inf, -Inf
     mnpos, mxpos = NaN, NaN
@@ -81,4 +81,3 @@ def peakdelta(v, delta, x=None):
                 lookformax = True
 
     return array(maxtab), array(mintab)
-

@@ -3,9 +3,9 @@ import numpy as np
 
 def rr_1_update(rr_1, NFound, Found):
     if np.logical_and(NFound <= 7, NFound > 0):
-        rr_1[0:NFound - 1] = np.ediff1d(Found[0:NFound, 0])
+        rr_1[0 : NFound - 1] = np.ediff1d(Found[0:NFound, 0])
     elif NFound > 7:
-        rr_1 = np.ediff1d((Found[NFound - 7:NFound - 1, 0]))
+        rr_1 = np.ediff1d((Found[NFound - 7 : NFound - 1, 0]))
 
     rr_average_1 = np.mean(rr_1)
 
@@ -14,10 +14,10 @@ def rr_1_update(rr_1, NFound, Found):
 
 def rr_2_update(rr_2, NFound, Found, rr_low_limit, rr_high_limit):
     if NFound > 0:
-        delta = np.ediff1d(Found[NFound - 1:NFound, 0])
+        delta = np.ediff1d(Found[NFound - 1 : NFound, 0])
         if np.logical_and(delta >= rr_low_limit, delta <= rr_high_limit):
             pos = np.mod(NFound, 7)
-            if (pos == 0):
+            if pos == 0:
                 rr_2[7] = delta
             else:
                 rr_2[pos] = delta
@@ -42,12 +42,12 @@ def sync(Found, NFound, ecg, N):
     for ii in range(0, NFound):
         xtemp = Found[ii, 0]
 
-        if (xtemp - 60 > 0):
+        if xtemp - 60 > 0:
             indInf = xtemp - 60
         else:
             indInf = 0
 
-        if (xtemp + 60 < N):
+        if xtemp + 60 < N:
             indSup = xtemp + 60
         else:
             indSup = N

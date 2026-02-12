@@ -19,12 +19,18 @@ class AE(nn.Module):
         super().__init__()
         self._features = None
 
-        self.encoder_hidden_layer = nn.Linear(in_features=kwargs["input_shape"], out_features=128)
+        self.encoder_hidden_layer = nn.Linear(
+            in_features=kwargs["input_shape"], out_features=128
+        )
         self.encoder_output_layer = nn.Linear(in_features=128, out_features=128)
         self.decoder_hidden_layer = nn.Linear(in_features=128, out_features=128)
-        self.decoder_output_layer = nn.Linear(in_features=128, out_features=kwargs["input_shape"])
+        self.decoder_output_layer = nn.Linear(
+            in_features=128, out_features=kwargs["input_shape"]
+        )
 
-        self.encoder_output_layer.register_forward_hook(self.save_outputs_hook(self.encoder_output_layer))
+        self.encoder_output_layer.register_forward_hook(
+            self.save_outputs_hook(self.encoder_output_layer)
+        )
 
     def forward(self, features):
         activation = self.encoder_hidden_layer(features)
@@ -40,6 +46,7 @@ class AE(nn.Module):
     def save_outputs_hook(self, layer_id):
         def fn(_, __, output):
             self._features = output.detach()
+
         return fn
 
 
@@ -105,14 +112,15 @@ def train_classifier(epochs, train_loader):
     return model, features, labels
 
 
-if __name__ == '__main__':
-    groups = ['05_11_2020_1',
-           '05_11_2020_2',
-           '10_11_2020_2',
-           '27_11_2020',
-           '11_12_2020_1',
-           '11_12_2020_2'
-           ]
+if __name__ == "__main__":
+    groups = [
+        "05_11_2020_1",
+        "05_11_2020_2",
+        "10_11_2020_2",
+        "27_11_2020",
+        "11_12_2020_1",
+        "11_12_2020_2",
+    ]
 
     data = SensorsDataset(sensors=[1], groups=groups[:-1])
 
