@@ -3,15 +3,15 @@ from scipy import signal
 def lpcar2cc(ar):
 
     sh = shape(ar)
-	
+
     if len(sh) == 1 :
-		p1 = len(ar)
-		nf = 1
-		b = zeros(len(ar))
+        p1 = len(ar)
+        nf = 1
+        b = zeros(len(ar))
     else:
-		p1 = len(ar[0])
-		nf = len(ar)
-		b = zeros(len(ar[0]))
+        p1 = len(ar[0])
+        nf = len(ar)
+        b = zeros(len(ar[0]))
     p = p1-1
 
     cm = arange(1,p+1)**(-1.)
@@ -24,9 +24,9 @@ def lpcar2cc(ar):
     
     for k in xrange(nf):
         if nf > 1:
-			cc += [ signal.lfilter(b,ar[k],ar[k,1:p1]*xm)*cm ]
+            cc += [ signal.lfilter(b,ar[k],ar[k,1:p1]*xm)*cm ]
         else:
-			cc = signal.lfilter(b,ar,ar[1:p1]*xm)*cm
+            cc = signal.lfilter(b,ar,ar[1:p1]*xm)*cm
 
     return cc
     
