@@ -9,6 +9,7 @@ from loop_system.Signals_Processing import *
 
 warnings.filterwarnings("ignore")
 
+
 def main():
 
     start_time = time.time()
@@ -19,7 +20,9 @@ def main():
 
     """Load Baseline Data file"""
 
-    baseline_file = select_file("Select the Baseline data file", [("CSV files", "*.csv")])
+    baseline_file = select_file(
+        "Select the Baseline data file", [("CSV files", "*.csv")]
+    )
 
     """Baseline Dataframe"""
     try:
@@ -57,7 +60,6 @@ def main():
     except Exception as e:
         print(f"An error occurred loading the N-Back data: {e}")
         sys.exit(1)
-
 
     """Signals Processing"""
     signals = getSignals(
@@ -104,7 +106,6 @@ def main():
     print("Performing GridSearchCV to find the best models...")
     best_models = gridSearchCV(X, Y)
 
-
     print("GridSearch completed.")
     # Sort the models by their best score in descending order
     sorted_models = sorted(
@@ -136,6 +137,7 @@ def main():
         print(f"Error saving the model: {e}")
 
     print(f"Elapsed time = {(time.time()-start_time)/60:.2f} minutes")
+
 
 if __name__ == "__main__":
     main()
