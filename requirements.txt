@@ -1,4 +1,4 @@
-opencv-python>=4.10.0.84
+opencv-python>=5.0.0.93
 numpy>=2.4.6
 bokeh>=2.4.3
 tornado>=6.5.6
