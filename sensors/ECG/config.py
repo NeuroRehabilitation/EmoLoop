@@ -10,7 +10,6 @@ class ECG_Config:
     butter_order: int = 5
     lowpass_freq: int = 5
     highpass_freq: int = 15
-    integration_window: float= 0.080
+    integration_window: float = 0.080
     library: str = "neurokit"
     sampling_rate: int = 100
-    

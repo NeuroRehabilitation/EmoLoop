@@ -4,6 +4,7 @@ from algorithms import (
     PanTompkinsAlgorithm,
 )
 
+
 class ECGAlgorithmSelector:
     """Selects ECG processing algorithm based on library name."""
 

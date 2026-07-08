@@ -1,6 +1,12 @@
 import numpy as np
 import scipy
-from novainstrumentation import butter_bandpass_filter, detect_panthomkins_peaks, rr_1_update, rr_2_update, sync
+from novainstrumentation import (
+    butter_bandpass_filter,
+    detect_panthomkins_peaks,
+    rr_1_update,
+    rr_2_update,
+    sync,
+)
 
 from base import ECG_base
 from config import ECG_Config
@@ -16,25 +22,32 @@ class PanTompkinsAlgorithm(ECG_base):
         VCC = self.config.VCC
         gain = self.config.gain
         resolution = self.config.resolution
-        signal_volts = (signal*pow(2,resolution) - 1/2)*VCC/gain
-        signal_mv = signal_volts*1000
+        signal_volts = (signal * pow(2, resolution) - 1 / 2) * VCC / gain
+        signal_mv = signal_volts * 1000
 
         return signal_mv
 
     def filter(self, signal: np.ndarray) -> np.ndarray:
         """Filter the ECG signal using Butterworth bandpass algorithm."""
 
-        filtered_signal = butter_bandpass_filter(signal, self.config.lowpass_freq, self.config.highpass_freq, fs=self.config.sampling_rate)
+        filtered_signal = butter_bandpass_filter(
+            signal,
+            self.config.lowpass_freq,
+            self.config.highpass_freq,
+            fs=self.config.sampling_rate,
+        )
 
         return filtered_signal
 
     def derivativeECG(self, signal: np.ndarray) -> np.ndarray:
         """Calculate the derivative of the ECG signal."""
 
-        return np.diff(signal,prepend=signal[0])
+        return np.diff(signal, prepend=signal[0])
 
     def integrateECG(self, signal: np.ndarray) -> np.ndarray:
-        nbr_sampls_int_wind = int(self.config.integration_window * self.config.sampling_rate)
+        nbr_sampls_int_wind = int(
+            self.config.integration_window * self.config.sampling_rate
+        )
         integrated_signal = np.zeros_like(signal)
         cumulative_sum = signal.cumsum()
         integrated_signal[nbr_sampls_int_wind:] = (
@@ -46,11 +59,10 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return integrated_signal
 
-
     def detect_r_peaks(self, filtered_data: np.ndarray, fs: int) -> np.ndarray:
         """Detect R-peaks in filtered ECG signal using Pan-Tompkins algorithm."""
         # Squaring
-        ecg_squared = 50.0 * filtered_data ** 2.0
+        ecg_squared = 50.0 * filtered_data**2.0
 
         # Find Peaks
         pksInd = detect_panthomkins_peaks(ecg_squared, mpd=35)
@@ -122,7 +134,8 @@ class PanTompkinsAlgorithm(ECG_base):
             if NFound_Old != NFound - 1:
                 rr_1, rr_average_1 = rr_1_update(rr_1, NFound - 1, Found)
                 rr_2, rr_average_2, flag, rr_low_limit, rr_high_limit = rr_2_update(
-                    rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit)
+                    rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit
+                )
 
                 NFound_Old = NFound - 1
 
@@ -132,7 +145,7 @@ class PanTompkinsAlgorithm(ECG_base):
                 # print('')
 
             if flag:
-                print('Gap Found')
+                print("Gap Found")
 
                 flag = 0
                 back = ii
