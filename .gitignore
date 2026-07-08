@@ -16,6 +16,7 @@ __pycache__/
 /Models/
 /user_models
 /Study3/
+/notebooks/
 *.csv
 *.xlsx
 
