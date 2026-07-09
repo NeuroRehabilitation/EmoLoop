@@ -13,7 +13,7 @@ class ECG_Config:
     mph: int = None
     mpd: int = 35
     threshold: int = 0
-    edge: str = 'rising'
+    edge: str = "rising"
     kpsh: bool = False
     valley: bool = False
     library: str = "neurokit"

@@ -15,8 +15,8 @@ class PanTompkinsAlgorithm(ECG_base):
         VCC = self.config.VCC
         gain = self.config.gain
         resolution = self.config.resolution
-        signal_volts = (signal*pow(2,resolution) - 1/2)*VCC/gain
-        signal_mv = signal_volts*1000
+        signal_volts = (signal * pow(2, resolution) - 1 / 2) * VCC / gain
+        signal_mv = signal_volts * 1000
 
         return signal_mv
 
@@ -37,16 +37,15 @@ class PanTompkinsAlgorithm(ECG_base):
     def derivativeECG(signal: np.ndarray) -> np.ndarray:
         """Calculate the derivative of the ECG signal."""
 
-        return np.diff(signal,prepend=signal[0])
+        return np.diff(signal, prepend=signal[0])
 
     @staticmethod
-    def squareECG(signal:np.ndarray)-> np.ndarray:
+    def squareECG(signal: np.ndarray) -> np.ndarray:
         """Square the ECG signal."""
-        return 50*np.square(signal)
+        return 50 * np.square(signal)
 
     @abstractmethod
-    def detect_r_peaks(self, signal:np.ndarray)->np.ndarray:
-
+    def detect_r_peaks(self, signal: np.ndarray) -> np.ndarray:
         """Detect peaks in data based on their amplitude and other features.
 
         Parameters
@@ -78,7 +77,7 @@ class PanTompkinsAlgorithm(ECG_base):
         ind : 1D array_like
             indeces of the peaks in `x`."""
 
-        x = np.atleast_1d(signal).astype('float64')
+        x = np.atleast_1d(signal).astype("float64")
         if x.size < 3:
             return np.array([], dtype=int)
         if self.config.valley:
@@ -94,15 +93,21 @@ class PanTompkinsAlgorithm(ECG_base):
         if not self.config.edge:
             ine = np.where((np.hstack((dx, 0)) < 0) & (np.hstack((0, dx)) > 0))[0]
         else:
-            if self.config.edge.lower() in ['rising', 'both']:
+            if self.config.edge.lower() in ["rising", "both"]:
                 ire = np.where((np.hstack((dx, 0)) <= 0) & (np.hstack((0, dx)) > 0))[0]
-            if self.config.edge.lower() in ['falling', 'both']:
+            if self.config.edge.lower() in ["falling", "both"]:
                 ife = np.where((np.hstack((dx, 0)) < 0) & (np.hstack((0, dx)) >= 0))[0]
         ind = np.unique(np.hstack((ine, ire, ife)))
         # handle NaN's
         if ind.size and indnan.size:
             # NaN's and values close to NaN's cannot be peaks
-            ind = ind[np.in1d(ind, np.unique(np.hstack((indnan, indnan - 1, indnan + 1))), invert=True)]
+            ind = ind[
+                np.in1d(
+                    ind,
+                    np.unique(np.hstack((indnan, indnan - 1, indnan + 1))),
+                    invert=True,
+                )
+            ]
         # first and last values of x cannot be peaks
         if ind.size and ind[0] == 0:
             ind = ind[1:]
@@ -122,8 +127,9 @@ class PanTompkinsAlgorithm(ECG_base):
             for i in range(ind.size):
                 if not idel[i]:
                     # keep peaks with the same height if kpsh is True
-                    idel = idel | (ind >= ind[i] - self.config.mpd) & (ind <= ind[i] + self.config.mpd) \
-                           & (x[ind[i]] > x[ind] if self.config.kpsh else True)
+                    idel = idel | (ind >= ind[i] - self.config.mpd) & (
+                        ind <= ind[i] + self.config.mpd
+                    ) & (x[ind[i]] > x[ind] if self.config.kpsh else True)
                     idel[i] = 0  # Keep current peak
             # remove the small peaks and sort back the indices by their occurrence
             ind = np.sort(ind[~idel])
@@ -133,9 +139,9 @@ class PanTompkinsAlgorithm(ECG_base):
     @staticmethod
     def rr_1_update(rr_1, NFound, Found):
         if np.logical_and(NFound <= 7, NFound > 0):
-            rr_1[0:NFound - 1] = np.ediff1d(Found[0:NFound, 0])
+            rr_1[0 : NFound - 1] = np.ediff1d(Found[0:NFound, 0])
         elif NFound > 7:
-            rr_1 = np.ediff1d((Found[NFound - 7:NFound - 1, 0]))
+            rr_1 = np.ediff1d((Found[NFound - 7 : NFound - 1, 0]))
 
         rr_average_1 = np.mean(rr_1)
 
@@ -148,7 +154,7 @@ class PanTompkinsAlgorithm(ECG_base):
         flag = 0
 
         if NFound > 0:
-            delta_arr = np.ediff1d(Found[NFound - 1:NFound, 0])
+            delta_arr = np.ediff1d(Found[NFound - 1 : NFound, 0])
 
             if delta_arr.size > 0:
                 delta = delta_arr.item() if delta_arr.size == 1 else delta_arr[-1]
@@ -174,12 +180,12 @@ class PanTompkinsAlgorithm(ECG_base):
         for ii in range(0, NFound):
             xtemp = Found[ii, 0]
 
-            if (xtemp - 60 > 0):
+            if xtemp - 60 > 0:
                 indInf = xtemp - 60
             else:
                 indInf = 0
 
-            if (xtemp + 60 < N):
+            if xtemp + 60 < N:
                 indSup = xtemp + 60
             else:
                 indSup = N
@@ -191,11 +197,11 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R
 
-    def panthomkins(self, signal: np.ndarray)->np.ndarray:
+    def panthomkins(self, signal: np.ndarray) -> np.ndarray:
 
         N = len(signal)
         # Squaring
-        ecg_filter = 50.0 * signal ** 2.0
+        ecg_filter = 50.0 * signal**2.0
 
         # Find Peaks
         pksInd = self.detect_r_peaks(ecg_filter)
@@ -266,8 +272,11 @@ class PanTompkinsAlgorithm(ECG_base):
 
             if NFound_Old != NFound - 1:
                 rr_1, rr_average_1 = self.rr_1_update(rr_1, NFound - 1, Found)
-                rr_2, rr_average_2, flag, rr_low_limit, rr_high_limit = self.rr_2_update(
-                    rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit)
+                rr_2, rr_average_2, flag, rr_low_limit, rr_high_limit = (
+                    self.rr_2_update(
+                        rr_2, NFound - 1, Found, rr_low_limit, rr_high_limit
+                    )
+                )
 
                 NFound_Old = NFound - 1
 
@@ -277,7 +286,7 @@ class PanTompkinsAlgorithm(ECG_base):
                 # print('')
 
             if flag:
-                print('Gap Found')
+                print("Gap Found")
 
                 flag = 0
                 back = ii
@@ -288,7 +297,6 @@ class PanTompkinsAlgorithm(ECG_base):
         min_start = int(0.15 * self.config.sampling_rate)
 
         return R[R >= min_start]
-
 
     def calculate_heart_rate(self, r_peaks: np.ndarray, fs: int) -> np.ndarray:
         """Calculate the heart rate from R-peaks."""
