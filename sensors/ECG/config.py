@@ -10,6 +10,9 @@ class ECG_Config:
     butter_order: int = 5
     lowpass_freq: int = 5
     highpass_freq: int = 15
-    integration_window: float = 0.080
+    minimum_peak_height: int = None
+    minimum_peak_distance: int = 35
+    edge: str = 'rising'
     library: str = "neurokit"
     sampling_rate: int = 100
+    
