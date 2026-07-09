@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any
 import numpy as np
 
+
 class ECG_base(ABC):
 
     @abstractmethod

@@ -12,7 +12,6 @@ class ECG_Config:
     highpass_freq: int = 15
     minimum_peak_height: int = None
     minimum_peak_distance: int = 35
-    edge: str = 'rising'
+    edge: str = "rising"
     library: str = "neurokit"
     sampling_rate: int = 100
-    
