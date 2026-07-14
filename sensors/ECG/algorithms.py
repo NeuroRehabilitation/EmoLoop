@@ -145,6 +145,7 @@ class PanTompkinsAlgorithm(ECG_base):
 
     @staticmethod
     def sync(Found, NFound, ecg, N):
+        """Sync to find exact R-peaks in original filtered signal."""
         R = np.ones(NFound, dtype=int)
 
         for ii in range(0, NFound):
@@ -163,7 +164,18 @@ class PanTompkinsAlgorithm(ECG_base):
             ind = range(int(indInf), int(indSup))
 
             xlook = ecg[ind]
-            R[ii] = indInf + np.where(xlook == max(ecg[ind]))[0][0]
+
+            # Find the maximum and its index (handle case where max might not be found)
+            max_val = max(ecg[ind])
+            match_indices = np.where(xlook == max_val)[0]
+
+            if len(match_indices) > 0:
+                R[ii] = indInf + match_indices[0]
+            else:
+                R[ii] = int(xtemp)  # Use original peak index if no match
+
+        # Remove duplicate peaks using np.unique()
+        R = np.unique(R)
 
         return R
 
@@ -271,14 +283,17 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R[R >= min_start]
 
-    def calculate_heart_rate(self, r_peaks: np.ndarray) -> np.ndarray:
+    def calculate_heart_rate(self, r_peaks: np.ndarray) -> Dict[str,Any]:
         """Calculate the heart rate from R-peaks."""
         rr_intervals = (
             np.diff(r_peaks) / self.config.sampling_rate
         )  # Convert to seconds
         heart_rate = 60 / rr_intervals  # Convert to beats per minute
 
-        return heart_rate
+        return {
+            "RR Intervals": rr_intervals,
+            "Heart Rate": heart_rate,
+        }
 
     def get_config(self):
         """Get the configuration of the ECG sensor."""

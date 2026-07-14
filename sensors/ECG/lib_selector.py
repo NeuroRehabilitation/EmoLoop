@@ -3,7 +3,8 @@ ECG Algorithm Selector - Factory pattern for selecting algorithms by name.
 """
 
 from typing import Dict, Any, List, Optional
-
+from algorithms import PanTompkinsAlgorithm
+from base import ECG_base
 
 class ECGAlgorithmSelector:
     """

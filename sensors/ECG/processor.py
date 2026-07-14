@@ -1,10 +1,7 @@
-"""
-ECG Signal Processor - High-level interface for processing ECG signals.
-Works independent of algorithm (can swap PanTompkins, custom, etc.).
-"""
-
 from typing import Dict, Any, Optional
 import numpy as np
+from config import ECG_Config
+from algorithms import PanTompkinsAlgorithm
 
 
 class ECG:
@@ -31,6 +28,7 @@ class ECG:
     def __init__(
         self,
         algorithm: Optional[ECG_base] = None,
+        config: Optional[ECG_Config] = None
     ) -> None:
         """
         Initialize the ECG processor.
@@ -47,7 +45,7 @@ class ECG:
         The sampling_rate is read from config.sampling_rate (default: 250).
         """
         # Initialize config first (always needed)
-        self.config = ECG_Config()
+        self.config = config or ECG_Config()
 
         # Get sampling_rate from config
         self.sampling_rate = self.config.sampling_rate
@@ -62,7 +60,7 @@ class ECG:
         self._raw_signal: Optional[np.ndarray] = None
         self._filtered_signal: Optional[np.ndarray] = None
         self._r_peaks: Optional[np.ndarray] = None
-        self._heart_rate: Optional[Dict[str, float]] = None
+        self._heart_rate: Optional[Dict[str, Any]] = None
 
     def process(self, signal: np.ndarray) -> Dict[str, Any]:
         """
