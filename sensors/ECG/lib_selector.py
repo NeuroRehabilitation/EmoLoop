@@ -6,6 +6,7 @@ from typing import Dict, Any, List, Optional
 from algorithms import PanTompkinsAlgorithm
 from base import ECG_base
 
+
 class ECGAlgorithmSelector:
     """
     Factory pattern for selecting ECG algorithms by name.
