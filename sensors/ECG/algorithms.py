@@ -167,7 +167,6 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R
 
-    
     def detect_r_peaks(self, signal: np.ndarray) -> np.ndarray:
 
         N = len(signal)
@@ -274,7 +273,9 @@ class PanTompkinsAlgorithm(ECG_base):
 
     def calculate_heart_rate(self, r_peaks: np.ndarray) -> np.ndarray:
         """Calculate the heart rate from R-peaks."""
-        rr_intervals = np.diff(r_peaks) / self.config.sampling_rate  # Convert to seconds
+        rr_intervals = (
+            np.diff(r_peaks) / self.config.sampling_rate
+        )  # Convert to seconds
         heart_rate = 60 / rr_intervals  # Convert to beats per minute
 
         return heart_rate

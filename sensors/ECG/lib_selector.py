@@ -4,6 +4,7 @@ ECG Algorithm Selector - Factory pattern for selecting algorithms by name.
 
 from typing import Dict, Any, List, Optional
 
+
 class ECGAlgorithmSelector:
     """
     Factory pattern for selecting ECG algorithms by name.
