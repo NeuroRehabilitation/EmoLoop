@@ -44,38 +44,8 @@ class PanTompkinsAlgorithm(ECG_base):
         """Square the ECG signal."""
         return 50 * np.square(signal)
 
-    @abstractmethod
-    def detect_r_peaks(self, signal: np.ndarray) -> np.ndarray:
-        """Detect peaks in data based on their amplitude and other features.
-
-        Parameters
-        ----------
-        x : 1D array_like
-            data.
-        mph : {None, number}, optional (default = None)
-            detect peaks that are greater than minimum peak height.
-        mpd : positive integer, optional (default = 1)
-            detect peaks that are at least separated by minimum peak distance (in
-            number of data).
-        threshold : positive number, optional (default = 0)
-            detect peaks (valleys) that are greater (smaller) than `threshold`
-            in relation to their immediate neighbors.
-        edge : {None, 'rising', 'falling', 'both'}, optional (default = 'rising')
-            for a flat peak, keep only the rising edge ('rising'), only the
-            falling edge ('falling'), both edges ('both'), or don't detect a
-            flat peak (None).
-        kpsh : bool, optional (default = False)
-            keep peaks with same height even if they are closer than `mpd`.
-        valley : bool, optional (default = False)
-            if True (1), detect valleys (local minima) instead of peaks.
-        show : bool, optional (default = False)
-            if True (1), plot data in matplotlib figure.
-        ax : a matplotlib.axes.Axes instance, optional (default = None).
-
-        Returns
-        -------
-        ind : 1D array_like
-            indeces of the peaks in `x`."""
+    def _find_peaks(self, signal: np.ndarray) -> np.ndarray:
+        """Detect peaks in data based on their amplitude and other features."""
 
         x = np.atleast_1d(signal).astype("float64")
         if x.size < 3:
@@ -197,14 +167,18 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R
 
-    def panthomkins(self, signal: np.ndarray) -> np.ndarray:
+    
+    def detect_r_peaks(self, signal: np.ndarray) -> np.ndarray:
 
         N = len(signal)
         # Squaring
         ecg_filter = 50.0 * signal**2.0
 
         # Find Peaks
-        pksInd = self.detect_r_peaks(ecg_filter)
+        pksInd = self._find_peaks(ecg_filter)
+
+        if len(pksInd) == 0:
+            raise ValueError("No peak was detected in the signal.")
 
         pks = ecg_filter[pksInd]
 
@@ -292,15 +266,15 @@ class PanTompkinsAlgorithm(ECG_base):
                 back = ii
                 ii = Found[-1, 2]
 
-        R = self.sync(Found, NFound, self, signal, N)
+        R = self.sync(Found, NFound, signal, N)
 
-        min_start = int(0.15 * self.config.sampling_rate)
+        min_start = int(self.config.discard_window * self.config.sampling_rate)
 
         return R[R >= min_start]
 
-    def calculate_heart_rate(self, r_peaks: np.ndarray, fs: int) -> np.ndarray:
+    def calculate_heart_rate(self, r_peaks: np.ndarray) -> np.ndarray:
         """Calculate the heart rate from R-peaks."""
-        rr_intervals = np.diff(r_peaks) / fs  # Convert to seconds
+        rr_intervals = np.diff(r_peaks) / self.config.sampling_rate  # Convert to seconds
         heart_rate = 60 / rr_intervals  # Convert to beats per minute
 
         return heart_rate

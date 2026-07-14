@@ -17,4 +17,5 @@ class ECG_Config:
     kpsh: bool = False
     valley: bool = False
     library: str = "neurokit"
+    discard_window: float=0.15
     sampling_rate: int = 1000
