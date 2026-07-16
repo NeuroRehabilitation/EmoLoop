@@ -24,8 +24,8 @@ class ECG_base(ABC):
         pass
 
     @abstractmethod
-    def calculate_heart_rate(self, r_peaks: np.ndarray) -> Dict[str, Any]:
-        """Calculate the heart rate of the ECG signal."""
+    def rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
+        """Calculate RR intervals from R-peaks."""
         pass
 
     @abstractmethod

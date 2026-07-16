@@ -59,7 +59,7 @@ class ECG:
         self._raw_signal: Optional[np.ndarray] = None
         self._filtered_signal: Optional[np.ndarray] = None
         self._r_peaks: Optional[np.ndarray] = None
-        self._heart_rate: Optional[Dict[str, Any]] = None
+        self._rr_intervals: Optional[np.ndarray] = None
 
     def process(self, signal: np.ndarray) -> Dict[str, Any]:
         """
@@ -105,17 +105,16 @@ class ECG:
         r_peaks = self.algorithm.detect_r_peaks(filtered_signal)
         self._r_peaks = r_peaks
 
-        # Step 3: Calculate heart rate
-        heart_rate = self.algorithm.calculate_heart_rate(r_peaks)
-        self._heart_rate = heart_rate
+        # Step 3: Calculate RR intervals
+        rr_intervals = self.algorithm.rr_intervals(r_peaks)
+        self._rr_intervals = rr_intervals
 
         # Return full results
         return {
             "raw_signal": signal,
             "filtered_signal": filtered_signal,
             "r_peaks": r_peaks,
-            "heart_rate": heart_rate,
-            "sampling_rate": self.sampling_rate,
+            "rr_intervals": rr_intervals,
         }
 
     def filter(self, signal: np.ndarray) -> np.ndarray:
@@ -152,24 +151,15 @@ class ECG:
         """
         return self.algorithm.detect_r_peaks(signal)
 
-    def calculate_heart_rate(self, r_peaks: np.ndarray) -> Dict[str, Any]:
+    def get_rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
         """
-        Calculate heart rate from R-peaks only.
-
-        Parameters:
-        -----------
-        r_peaks : np.ndarray
-            Array of R-peak indices
-
-        Returns:
-        --------
-        Dict[str, float]
-            Heart rate metrics:
-            - "mean_hr": mean heart rate (bpm)
-            - "hr_std": standard deviation of HR (bpm)
-            - "hrv": heart rate variability (RR interval std, seconds)
+        Calculate R-peak intervals from R-peak indices.
+        :param r_peaks:
+        :type r_peaks:
+        :return:
+        :rtype:
         """
-        return self.algorithm.calculate_heart_rate(r_peaks)
+        return self.algorithm.rr_intervals(r_peaks)
 
     # Getter methods for stored results
 
@@ -184,10 +174,6 @@ class ECG:
     def get_r_peaks(self) -> Optional[np.ndarray]:
         """Get the detected R-peaks from last process() call."""
         return self._r_peaks
-
-    def get_heart_rate(self) -> Optional[Dict[str, float]]:
-        """Get the heart rate metrics from last process() call."""
-        return self._heart_rate
 
     def get_config(self) -> Dict[str, Any]:
         """Get the ECG sensor configuration."""
@@ -208,4 +194,4 @@ class ECG:
         self._raw_signal = None
         self._filtered_signal = None
         self._r_peaks = None
-        self._heart_rate = None
+        self._rr_intervals = None

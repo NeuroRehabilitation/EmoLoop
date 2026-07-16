@@ -278,17 +278,9 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R[R >= min_start]
 
-    def calculate_heart_rate(self, r_peaks: np.ndarray) -> Dict[str, Any]:
-        """Calculate the heart rate from R-peaks."""
-        rr_intervals = (
-            np.diff(r_peaks) / self.config.sampling_rate
-        )  # Convert to seconds
-        heart_rate = 60 / rr_intervals  # Convert to beats per minute
-
-        return {
-            "RR": rr_intervals,
-            "HR": heart_rate,
-        }
+    def rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
+        """Calculate RR intervals from R-peaks."""
+        return np.diff(r_peaks) / self.config.sampling_rate
 
     def get_config(self):
         """Get the configuration of the ECG sensor."""
