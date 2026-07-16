@@ -2,11 +2,12 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
 
 class Dashboard:
     def __init__(self, root, ecg):
+        self.initial_plot = True
         self.root = root
         self.ecg = ecg
         self.root.title("EmoLoop ECG Dashboard")
@@ -66,6 +67,9 @@ class Dashboard:
         self.canvas.draw()
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
 
+        self.toolbar = NavigationToolbar2Tk(self.canvas, plot_frame)
+        self.toolbar.update()
+
     def load_ecg(self):
         path = filedialog.askopenfilename(
             title="Open ECG data",
@@ -111,6 +115,7 @@ class Dashboard:
             return
 
         t = np.arange(len(signal)) / self.ecg.sampling_rate
+        self.ax.set_autoscale_on(True)
         self.ecg_line.set_data(t, signal)
 
         if r_peaks is not None and len(r_peaks) > 0:
