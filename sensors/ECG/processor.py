@@ -1,7 +1,8 @@
 from typing import Dict, Any, Optional
 import numpy as np
-from config import ECG_Config
-from algorithms import PanTompkinsAlgorithm
+from sensors.ECG.config import ECG_Config
+from sensors.ECG.algorithms import PanTompkinsAlgorithm
+from sensors.ECG.base import ECG_base
 
 
 class ECG:

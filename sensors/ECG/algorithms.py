@@ -2,8 +2,8 @@ from abc import abstractmethod
 
 import numpy as np
 import scipy
-from base import ECG_base
-from config import ECG_Config
+from sensors.ECG.base import ECG_base
+from sensors.ECG.config import ECG_Config
 
 
 class PanTompkinsAlgorithm(ECG_base):
@@ -265,10 +265,6 @@ class PanTompkinsAlgorithm(ECG_base):
 
                 NFound_Old = NFound - 1
 
-                # if np.mod(NFound, 8) == 0:
-                # print(['Average of the 8 most recent HR is ',
-                # str(rr_average_1 / fs * 60.0), ' (BPM)'])
-                # print('')
 
             if flag:
                 print("Gap Found")
@@ -291,8 +287,8 @@ class PanTompkinsAlgorithm(ECG_base):
         heart_rate = 60 / rr_intervals  # Convert to beats per minute
 
         return {
-            "RR Intervals": rr_intervals,
-            "Heart Rate": heart_rate,
+            "RR": rr_intervals,
+            "HR": heart_rate,
         }
 
     def get_config(self):
