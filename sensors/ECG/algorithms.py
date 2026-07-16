@@ -265,7 +265,6 @@ class PanTompkinsAlgorithm(ECG_base):
 
                 NFound_Old = NFound - 1
 
-
             if flag:
                 print("Gap Found")
 

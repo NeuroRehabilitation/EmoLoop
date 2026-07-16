@@ -23,8 +23,12 @@ class Dashboard:
         top = ttk.Frame(self.root, padding=10)
         top.pack(side=tk.TOP, fill=tk.X)
 
-        ttk.Button(top, text="Load ECG Data", command=self.load_ecg).pack(side=tk.LEFT, padx=5)
-        ttk.Button(top, text="Process R Peaks", command=self.process_ecg).pack(side=tk.LEFT, padx=5)
+        ttk.Button(top, text="Load ECG Data", command=self.load_ecg).pack(
+            side=tk.LEFT, padx=5
+        )
+        ttk.Button(top, text="Process R Peaks", command=self.process_ecg).pack(
+            side=tk.LEFT, padx=5
+        )
 
         self.mean_hr_var = tk.StringVar(value="Mean HR: --")
         self.hr_std_var = tk.StringVar(value="HR Std: --")
@@ -54,8 +58,8 @@ class Dashboard:
         self.ax.set_ylabel("Amplitude")
         self.ax.grid(True, alpha=0.3)
 
-        self.ecg_line, = self.ax.plot([], [], lw=1, label="ECG")
-        self.peak_line, = self.ax.plot([], [], "ro", label="R-peaks")
+        (self.ecg_line,) = self.ax.plot([], [], lw=1, label="ECG")
+        (self.peak_line,) = self.ax.plot([], [], "ro", label="R-peaks")
         self.ax.legend()
 
         self.canvas = FigureCanvasTkAgg(self.fig, master=plot_frame)
@@ -65,7 +69,7 @@ class Dashboard:
     def load_ecg(self):
         path = filedialog.askopenfilename(
             title="Open ECG data",
-            filetypes=[("TXT Files", "*.txt"), ("All files", "*.*")]
+            filetypes=[("TXT Files", "*.txt"), ("All files", "*.*")],
         )
         if not path:
             return
