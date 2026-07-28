@@ -4,6 +4,7 @@ from sensors.HRV.base import HRV_base
 from sensors.HRV.config import HRV_Config
 
 import numpy as np
+import scipy as sc
 
 
 class HRVAlgorithm(HRV_base):
@@ -135,3 +136,63 @@ class HRVAlgorithm(HRV_base):
         if np.isnan(nn20):
             return np.nan
         return float(round((float(nn20) / len(rr_intervals)) * 100, 4))
+
+    @staticmethod
+    def frequencyAnalysis(self,rr_intervals: np.ndarray, rr_time:np.ndarray):
+        if len(rr_time) < 4 or len(rr_intervals) < 4:
+            return np.array([]), np.array([])
+
+        t_new = np.arange(rr_time[0], rr_intervals[-1], 1.0 / self.config.interpolation_rate)
+
+        tck = sc.interpolate.splrep(rr_time, rr_intervals, s=0)
+        rr_even = sc.interpolate.splev(t_new, tck)
+        rr_even = rr_even - np.mean(rr_even)
+
+        freq_axis, power_axis = sc.signal.welch(
+            rr_even,
+            fs=self.config.interpolation_rate,
+            window=sc.signal.get_window(self.config.window, min(len(rr_even), 1000)),
+            nperseg=min(len(rr_even), 1000),
+        )
+
+        mask = freq_axis < 0.5
+        return freq_axis[mask], power_axis[mask]
+
+
+    def frequency_domain_features(self,freqs: np.ndarray,power: np.ndarray) -> Dict[str, Any]:
+        """
+        Compute HRV band powers and normalized units.
+
+        :param freqs: frequency axis
+        :param power: power spectral density
+        :return: dictionary of HRV features
+        """
+
+        def band_power(fmin, fmax):
+            idx = (freqs >= fmin) & (freqs < fmax)
+            return sc.integrate.trapz(power[idx], freqs[idx]) if np.any(idx) else np.nan
+
+        vlf = band_power(0.0033, 0.04)
+        lf = band_power(0.04, 0.15)
+        hf = band_power(0.15, 0.4)
+        total_power = band_power(0.0033, 0.4)
+
+        if np.isfinite(total_power) and (total_power - vlf) > 0:
+            lf_norm = lf / (total_power - vlf) * 100
+            hf_norm = hf / (total_power - vlf) * 100
+        else:
+            lf_norm = np.nan
+            hf_norm = np.nan
+
+        ratio = lf_norm / hf_norm if np.isfinite(lf_norm) and np.isfinite(hf_norm) and hf_norm > 0 else np.nan
+
+        return {
+            "VLF_Power": [vlf],
+            "LF_Power": [lf],
+            "HF_Power": [hf],
+            "Total_Power": [total_power],
+            "LF_(nu)": [lf_norm],
+            "HF_(nu)": [hf_norm],
+            "VLF/HF": [ratio],
+        }
+

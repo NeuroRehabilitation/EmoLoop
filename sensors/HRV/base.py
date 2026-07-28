@@ -48,7 +48,7 @@ class HRV_base(ABC):
         pass
 
     @abstractmethod
-    def frequency_domain_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
+    def frequency_domain_features(self, freqs: np.ndarray, power:np.ndarray) -> Dict[str, Any]:
         """
         Abstract method to calculate frequency-domain features from RR intervals.
         Parameters:
