@@ -5,6 +5,7 @@ from sensors.HRV.config import HRV_Config
 
 import numpy as np
 
+
 class HRVAlgorithm(HRV_base):
     def __init__(self, config: HRV_Config):
         self.config = config
@@ -26,29 +27,50 @@ class HRVAlgorithm(HRV_base):
 
         return rr_intervals[keep]
 
-    def rr_intervals(self,rr_intervals: np.ndarray) ->Dict[str,float]:
+    def rr_intervals(self, rr_intervals: np.ndarray) -> Dict[str, float]:
         if rr_intervals.size == 0:
-            return {"Avg RR": np.nan, "Min RR": np.nan, "Max RR": np.nan, "SD RR": np.nan}
+            return {
+                "Avg RR": np.nan,
+                "Min RR": np.nan,
+                "Max RR": np.nan,
+                "SD RR": np.nan,
+            }
 
-        return {"Avg RR": float(np.nanmean(rr_intervals)),
-                "Min RR": float(np.nanmin(rr_intervals)),
-                "Max RR": float(np.nanmax(rr_intervals)),
-                "SD RR": float(np.nanstd(rr_intervals))}
+        return {
+            "Avg RR": float(np.nanmean(rr_intervals)),
+            "Min RR": float(np.nanmin(rr_intervals)),
+            "Max RR": float(np.nanmax(rr_intervals)),
+            "SD RR": float(np.nanstd(rr_intervals)),
+        }
 
-    def heart_rate(self, rr_intervals: np.ndarray) -> Dict[str,float]:
+    def heart_rate(self, rr_intervals: np.ndarray) -> Dict[str, float]:
         if rr_intervals.size == 0:
-            return {"Avg HR": np.nan, "Min HR": np.nan, "Max HR": np.nan, "SD HR": np.nan}
+            return {
+                "Avg HR": np.nan,
+                "Min HR": np.nan,
+                "Max HR": np.nan,
+                "SD HR": np.nan,
+            }
 
-        heart_rate = 60/rr_intervals
+        heart_rate = 60 / rr_intervals
 
-        return {"Avg HR": float(np.nanmean(heart_rate)),
-                "Min HR": float(np.nanmin(heart_rate)),
-                "Max HR": float(np.nanmax(heart_rate)),
-                "SD HR": float(np.nanstd(heart_rate))}
+        return {
+            "Avg HR": float(np.nanmean(heart_rate)),
+            "Min HR": float(np.nanmin(heart_rate)),
+            "Max HR": float(np.nanmax(heart_rate)),
+            "SD HR": float(np.nanstd(heart_rate)),
+        }
 
     def time_domain_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
         if rr_intervals.size == 0:
-            return {"SDNN": np.nan, "RMSSD": np.nan, "NN50": np.nan, "pNN50": np.nan, "NN20": np.nan, "pNN20": np.nan}
+            return {
+                "SDNN": np.nan,
+                "RMSSD": np.nan,
+                "NN50": np.nan,
+                "pNN50": np.nan,
+                "NN20": np.nan,
+                "pNN20": np.nan,
+            }
 
         nn50 = self.NN50(rr_intervals)
         nn20 = self.NN20(rr_intervals)
@@ -59,7 +81,7 @@ class HRVAlgorithm(HRV_base):
             "NN50": nn50,
             "pNN50": self.pNN50(nn50, rr_intervals),
             "NN20": nn20,
-            "pNN20": self.pNN20(nn20, rr_intervals)
+            "pNN20": self.pNN20(nn20, rr_intervals),
         }
 
     @staticmethod
@@ -74,7 +96,13 @@ class HRVAlgorithm(HRV_base):
         if rr_intervals.size < 2:
             return np.nan
 
-        return float(round(np.sqrt(np.sum((np.diff(rr_intervals)) ** 2) / (len(rr_intervals) - 1))* 1000,4,))
+        return float(
+            round(
+                np.sqrt(np.sum((np.diff(rr_intervals)) ** 2) / (len(rr_intervals) - 1))
+                * 1000,
+                4,
+            )
+        )
 
     @staticmethod
     def NN50(rr_intervals: np.ndarray) -> int:
@@ -107,4 +135,3 @@ class HRVAlgorithm(HRV_base):
         if np.isnan(nn20):
             return np.nan
         return float(round((float(nn20) / len(rr_intervals)) * 100, 4))
-

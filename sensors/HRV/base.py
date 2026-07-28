@@ -17,14 +17,14 @@ class HRV_base(ABC):
         pass
 
     @abstractmethod
-    def rr_intervals(self,rr_intervals: np.ndarray) ->Dict[str,float]:
+    def rr_intervals(self, rr_intervals: np.ndarray) -> Dict[str, float]:
         """
         Abstract method to calculate features from RR intervals.
         """
         pass
 
     @abstractmethod
-    def heart_rate(self, rr_intervals: np.ndarray) -> Dict[str,float]:
+    def heart_rate(self, rr_intervals: np.ndarray) -> Dict[str, float]:
         """
         Abstract method to calculate heart rate from RR intervals.
         Parameters:
