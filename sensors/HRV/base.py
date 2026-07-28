@@ -17,14 +17,21 @@ class HRV_base(ABC):
         pass
 
     @abstractmethod
-    def heart_rate(self, rr_intervals: np.ndarray) -> float:
+    def rr_intervals(self,rr_intervals: np.ndarray) ->Dict[str,float]:
+        """
+        Abstract method to calculate features from RR intervals.
+        """
+        pass
+
+    @abstractmethod
+    def heart_rate(self, rr_intervals: np.ndarray) -> Dict[str,float]:
         """
         Abstract method to calculate heart rate from RR intervals.
         Parameters:
         rr_intervals (np.ndarray): The RR intervals array.
 
         Returns:
-        float: The calculated heart rate in beats per minute (bpm).
+        Dict[str, float]: A dictionary containing the calculated heart rate metrics.
         """
         pass
 
