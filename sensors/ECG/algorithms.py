@@ -280,7 +280,11 @@ class PanTompkinsAlgorithm(ECG_base):
 
     def rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
         """Calculate RR intervals from R-peaks."""
-        return np.diff(r_peaks) / self.config.sampling_rate
+
+        rr_intervals =np.diff(r_peaks) / self.config.sampling_rate
+        rr_time = r_peaks[1:] / self.config.sampling_rate
+
+        return rr_intervals, rr_time
 
     def get_config(self):
         """Get the configuration of the ECG sensor."""

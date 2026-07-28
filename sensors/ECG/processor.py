@@ -60,6 +60,7 @@ class ECG:
         self._filtered_signal: Optional[np.ndarray] = None
         self._r_peaks: Optional[np.ndarray] = None
         self._rr_intervals: Optional[np.ndarray] = None
+        self._rr_time: Optional[np.ndarray] = None
 
     def process(self, signal: np.ndarray) -> Dict[str, Any]:
         """
@@ -106,8 +107,9 @@ class ECG:
         self._r_peaks = r_peaks
 
         # Step 3: Calculate RR intervals
-        rr_intervals = self.algorithm.rr_intervals(r_peaks)
+        rr_intervals, rr_time = self.algorithm.rr_intervals(r_peaks)
         self._rr_intervals = rr_intervals
+        self._rr_time = rr_time
 
         # Return full results
         return {
@@ -115,6 +117,7 @@ class ECG:
             "filtered_signal": filtered_signal,
             "r_peaks": r_peaks,
             "rr_intervals": rr_intervals,
+            "rr_time": rr_time,
         }
 
     def filter(self, signal: np.ndarray) -> np.ndarray:
