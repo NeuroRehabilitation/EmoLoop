@@ -56,7 +56,7 @@ class Dashboard:
         self.sd2_var = tk.StringVar(value="SD2: --")
         self.sd1_var = tk.StringVar(value="SD1: --")
         self.sd2_sd1_var = tk.StringVar(value="SD2/SD1: --")
-        
+
         self.rpeaks_var = tk.StringVar(value="R-peaks: --")
         self.status_var = tk.StringVar(value="Ready")
 
