@@ -11,7 +11,7 @@ class Dashboard:
         self.root = root
         self.ecg = ecg
         self.root.title("EmoLoop ECG Dashboard")
-        self.root.geometry("1200x800")
+        self.root.geometry("1920x1080")
 
         self.signal = None
         self.time = None
@@ -31,9 +31,32 @@ class Dashboard:
             side=tk.LEFT, padx=5
         )
 
-        self.mean_hr_var = tk.StringVar(value="Mean HR: --")
-        self.hr_std_var = tk.StringVar(value="HR Std: --")
-        self.hrv_var = tk.StringVar(value="HRV: --")
+        self.avg_hr_var = tk.StringVar(value="Avg HR: --")
+        self.min_hr_var = tk.StringVar(value="Min HR: --")
+        self.max_hr_var = tk.StringVar(value="Max HR: --")
+        self.hr_std_var = tk.StringVar(value="Std HR: --")
+
+        self.sdnn_var = tk.StringVar(value="SDNN: --")
+        self.rmssd_var = tk.StringVar(value="RMSSD: --")
+        self.nn50_var = tk.StringVar(value="NN50: --")
+        self.pnn50_var = tk.StringVar(value="pNN50: --")
+        self.nn20_var = tk.StringVar(value="NN20: --")
+        self.pnn20_var = tk.StringVar(value="pNN20: --")
+
+        self.vlf_power_var = tk.StringVar(value="VLF/HF: --")
+        self.lf_power_var = tk.StringVar(value="LF/HF: --")
+        self.hf_power_var = tk.StringVar(value="HF/HF: --")
+        self.total_power_var = tk.StringVar(value="Total Power: --")
+        self.lf_norm_var = tk.StringVar(value="LF (nu): --")
+        self.hf_norm_var = tk.StringVar(value="HF (nu): --")
+        self.lf_hf_var = tk.StringVar(value="LF/HF: --")
+
+        self.std_var = tk.StringVar(value="STD: --")
+        self.sdsd_var = tk.StringVar(value="SDSD: --")
+        self.sd2_var = tk.StringVar(value="SD2: --")
+        self.sd1_var = tk.StringVar(value="SD1: --")
+        self.sd2_sd1_var = tk.StringVar(value="SD2/SD1: --")
+        
         self.rpeaks_var = tk.StringVar(value="R-peaks: --")
         self.status_var = tk.StringVar(value="Ready")
 

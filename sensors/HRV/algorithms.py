@@ -212,7 +212,7 @@ class HRVAlgorithm(HRV_base):
             "Total_Power": [total_power],
             "LF_(nu)": [lf_norm],
             "HF_(nu)": [hf_norm],
-            "VLF/HF": [ratio],
+            "LF/HF": [ratio],
         }
 
     def non_linear_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
