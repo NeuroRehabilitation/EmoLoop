@@ -187,10 +187,10 @@ class HRVAlgorithm(HRV_base):
             idx = (freqs >= fmin) & (freqs < fmax)
             return sc.integrate.trapz(power[idx], freqs[idx]) if np.any(idx) else np.nan
 
-        vlf = band_power(0.0033, 0.04)
-        lf = band_power(0.04, 0.15)
-        hf = band_power(0.15, 0.4)
-        total_power = band_power(0.0033, 0.4)
+        vlf = band_power(self.config.vlf_lfreq, self.config.vlf_hfreq)
+        lf = band_power(self.config.lf_lfreq, self.config.lf_hfreq)
+        hf = band_power(self.config.hf_lfreq, self.config.hf_hfreq)
+        total_power = band_power(self.config.vlf_lfreq, self.config.hf_hfreq)
 
         if np.isfinite(total_power) and (total_power - vlf) > 0:
             lf_norm = lf / (total_power - vlf) * 100
