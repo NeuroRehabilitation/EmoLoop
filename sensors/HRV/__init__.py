@@ -1,4 +1,3 @@
-
 # Expose main classes for easy importing
 from sensors.HRV.processor import HRV
 from sensors.HRV.base import HRV_base

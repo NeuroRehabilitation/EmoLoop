@@ -2,6 +2,7 @@ from typing import Dict, Any, Optional
 import numpy as np
 from sensors.HRV.config import HRV_Config
 from sensors.HRV.base import HRV_base
+
 # from sensors.HRV.algorithms import HRVAlgorithm  # if you need a default
 
 
@@ -56,6 +57,7 @@ class HRV:
             self.algorithm = algorithm
         else:
             from sensors.HRV.algorithms import HRVAlgorithm
+
             self.algorithm = HRVAlgorithm(self.config)
 
         # Store processing results (None until process() is called)
@@ -111,9 +113,7 @@ class HRV:
         """
         # Validate input
         if rr_intervals is None and r_peaks is None:
-            raise ValueError(
-                "Either rr_intervals or r_peaks must be provided"
-            )
+            raise ValueError("Either rr_intervals or r_peaks must be provided")
 
         # Compute RR intervals if r_peaks given
         if r_peaks is not None:
