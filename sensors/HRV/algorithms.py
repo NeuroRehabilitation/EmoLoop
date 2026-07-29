@@ -87,15 +87,10 @@ class HRVAlgorithm(HRV_base):
 
     @staticmethod
     def SDNN(rr_intervals: np.ndarray) -> float:
-        if rr_intervals.size == 0:
-            return np.nan
-
-        return float(round(np.std(rr_intervals) * 1000, 4))
+        return float(round(np.std(rr_intervals) * 1000, 4)) if rr_intervals.size > 0 else np.nan
 
     @staticmethod
     def RMSSD(rr_intervals: np.ndarray) -> float:
-        if rr_intervals.size < 2:
-            return np.nan
 
         return float(
             round(
@@ -103,39 +98,30 @@ class HRVAlgorithm(HRV_base):
                 * 1000,
                 4,
             )
-        )
+        ) if not rr_intervals.size < 2 else np.nan
 
     @staticmethod
     def NN50(rr_intervals: np.ndarray) -> int:
-        if rr_intervals.size < 2:
-            return np.nan
 
         rr_interval_diff = np.diff(rr_intervals)
         rr_interval_abs = np.abs(rr_interval_diff)
 
-        return sum(1 for i in rr_interval_abs if i > 0.05)
+        return sum(1 for i in rr_interval_abs if i > 0.05) if not rr_intervals.size < 2 else np.nan
 
     @staticmethod
     def pNN50(nn50: float, rr_intervals: np.ndarray) -> float:
-        if np.isnan(nn50):
-            return np.nan
-        return float(round((float(nn50) / len(rr_intervals)) * 100, 4))
+        return float(round((float(nn50) / len(rr_intervals)) * 100, 4)) if not np.isnan(nn50) else np.nan
 
     @staticmethod
     def NN20(rr_intervals: np.ndarray) -> int:
-        if rr_intervals.size < 2:
-            return np.nan
-
         rr_interval_diff = np.diff(rr_intervals)
         rr_interval_abs = np.abs(rr_interval_diff)
 
-        return sum(1 for i in rr_interval_abs if i > 0.02)
+        return sum(1 for i in rr_interval_abs if i > 0.02) if not rr_intervals.size < 2 else np.nan
 
     @staticmethod
     def pNN20(nn20: float, rr_intervals: np.ndarray) -> float:
-        if np.isnan(nn20):
-            return np.nan
-        return float(round((float(nn20) / len(rr_intervals)) * 100, 4))
+        return float(round((float(nn20) / len(rr_intervals)) * 100, 4)) if not np.isnan(nn20) else np.nan
 
     @staticmethod
     def frequencyAnalysis(self, rr_intervals: np.ndarray, rr_time: np.ndarray):
@@ -202,3 +188,35 @@ class HRVAlgorithm(HRV_base):
             "HF_(nu)": [hf_norm],
             "VLF/HF": [ratio],
         }
+
+    def non_linear_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
+        STD = round(float(np.std(rr_intervals)), 4)
+        SDSD = self.SDSD(rr_intervals)
+        SD2 = self.SD2(SDSD, STD)
+        SD1 = self.SD1(SDSD)
+        SD2_SD1 = self.SD2_SD1(SD1, SD2)
+
+        return {
+            "STD": [STD],
+            "SDSD": [SDSD],
+            "SD2": [SD2],
+            "SD1": [SD1],
+            "SD2/SD1": [SD2_SD1],
+        }
+
+    @staticmethod
+    def SDSD(rr_intervals: np.ndarray) -> float:
+        diff_rr = np.diff(rr_intervals)
+        return float(round(np.std(diff_rr) * 1000, 4)) if rr_intervals.size < 2 else np.nan
+
+    @staticmethod
+    def SD2(SDSD:float, STD:float) -> float:
+        return float(round(np.sqrt(2 * STD**2 - 0.5 * SDSD**2), 4) * 1000)
+
+    @staticmethod
+    def SD1(SDSD:float)->float:
+        return float(round(np.sqrt(0.5 * SDSD**2), 4) * 1000)
+
+    @staticmethod
+    def SD2_SD1(SD1:float, SD2:float)->float:
+        return float(round(SD2/SD1,4)) if SD1 != 0 else np.nan
