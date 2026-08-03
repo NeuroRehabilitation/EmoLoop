@@ -149,8 +149,11 @@ class HRVAlgorithm(HRV_base):
             else np.nan
         )
 
-
-    def frequencyAnalysis(self,rr_intervals: np.ndarray, rr_time: np.ndarray,):
+    def frequencyAnalysis(
+        self,
+        rr_intervals: np.ndarray,
+        rr_time: np.ndarray,
+    ):
         if len(rr_time) < 4 or len(rr_intervals) < 4:
             return np.array([]), np.array([])
 
