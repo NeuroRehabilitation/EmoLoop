@@ -71,9 +71,9 @@ class HRV:
 
     def process(
         self,
-        rr_intervals: Optional[np.ndarray] = None,
-        rr_time: Optional[np.ndarray] = None,
-        r_peaks: Optional[np.ndarray] = None,
+        rr_intervals: np.ndarray = None,
+        rr_time: np.ndarray = None,
+        r_peaks: np.ndarray = None,
         remove_ectopy: bool = True,
     ) -> Dict[str, Any]:
         """
@@ -159,7 +159,7 @@ class HRV:
             "rr_intervals": rr_intervals,
             "rr_time": rr_time,
             "time_features": time_features,
-            "freq_features": freq_features,
+            "frequency_features": freq_features,
             "nonlinear_features": nonlinear_features,
         }
 
