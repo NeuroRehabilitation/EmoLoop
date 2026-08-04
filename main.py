@@ -6,7 +6,6 @@ from sensors.HRV import HRV
 from UI.pages.dashboard import Dashboard
 from PySide6.QtWidgets import QApplication, QMainWindow
 
-
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setStyle("Fusion")

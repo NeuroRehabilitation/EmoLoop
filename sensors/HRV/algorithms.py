@@ -157,9 +157,7 @@ class HRVAlgorithm(HRV_base):
         if len(rr_time) < 4 or len(rr_intervals) < 4:
             return np.array([]), np.array([])
 
-        t_new = np.arange(
-            rr_time[0], rr_time[-1], 1.0 / self.config.interpolation_rate
-        )
+        t_new = np.arange(rr_time[0], rr_time[-1], 1.0 / self.config.interpolation_rate)
 
         tck = sc.interpolate.splrep(rr_time, rr_intervals, s=0)
         rr_even = sc.interpolate.splev(t_new, tck)
@@ -171,7 +169,6 @@ class HRVAlgorithm(HRV_base):
             window=sc.signal.get_window(self.config.window, min(len(rr_even), 1000)),
             nperseg=min(len(rr_even), 1000),
         )
-
 
         mask = freq_axis < 0.5
         return freq_axis[mask], power_axis[mask]
@@ -189,7 +186,11 @@ class HRVAlgorithm(HRV_base):
 
         def band_power(fmin, fmax):
             idx = (freqs >= fmin) & (freqs < fmax)
-            return sc.integrate.trapezoid(power[idx], freqs[idx]) if np.any(idx) else np.nan
+            return (
+                sc.integrate.trapezoid(power[idx], freqs[idx])
+                if np.any(idx)
+                else np.nan
+            )
 
         vlf = float(band_power(self.config.vlf_lfreq, self.config.vlf_hfreq))
         lf = float(band_power(self.config.lf_lfreq, self.config.lf_hfreq))

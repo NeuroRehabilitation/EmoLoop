@@ -109,7 +109,6 @@ class HRV:
             If no valid input is provided
         """
 
-
         # Validate input
         if rr_intervals is None:
             raise ValueError("rr_intervals must be provided")

@@ -3,8 +3,17 @@ import numpy as np
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
-    QPushButton, QLabel, QFrame, QFileDialog, QSizePolicy, QGridLayout
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QFrame,
+    QFileDialog,
+    QSizePolicy,
+    QGridLayout,
 )
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
@@ -75,12 +84,29 @@ class Dashboard(QMainWindow):
         self.rpeaks_var = QLabel("R-peaks: --")
 
         self.metric_labels = [
-            self.avg_hr_var, self.min_hr_var, self.max_hr_var, self.hr_std_var,
-            self.sdnn_var, self.rmssd_var, self.nn50_var, self.pnn50_var,
-            self.nn20_var, self.pnn20_var, self.vlf_power_var, self.lf_power_var,
-            self.hf_power_var, self.total_power_var, self.lf_norm_var,
-            self.hf_norm_var, self.lf_hf_var, self.std_var, self.sdsd_var,
-            self.sd2_var, self.sd1_var, self.sd2_sd1_var, self.rpeaks_var
+            self.avg_hr_var,
+            self.min_hr_var,
+            self.max_hr_var,
+            self.hr_std_var,
+            self.sdnn_var,
+            self.rmssd_var,
+            self.nn50_var,
+            self.pnn50_var,
+            self.nn20_var,
+            self.pnn20_var,
+            self.vlf_power_var,
+            self.lf_power_var,
+            self.hf_power_var,
+            self.total_power_var,
+            self.lf_norm_var,
+            self.hf_norm_var,
+            self.lf_hf_var,
+            self.std_var,
+            self.sdsd_var,
+            self.sd2_var,
+            self.sd1_var,
+            self.sd2_sd1_var,
+            self.rpeaks_var,
         ]
 
         for lbl in self.metric_labels:
@@ -95,7 +121,6 @@ class Dashboard(QMainWindow):
 
         left_container = QVBoxLayout()
         left_container.addWidget(self.metrics_panel)
-
 
         left_widget = QWidget()
         left_widget.setLayout(left_container)
@@ -123,18 +148,15 @@ class Dashboard(QMainWindow):
         self.ax.set_ylabel("Amplitude")
         self.ax.grid(True, alpha=0.3)
 
-        self.ecg_line, = self.ax.plot([], [], lw=1, label="ECG")
-        self.peak_line, = self.ax.plot([], [], "ro", ms=4, label="R-peaks")
+        (self.ecg_line,) = self.ax.plot([], [], lw=1, label="ECG")
+        (self.peak_line,) = self.ax.plot([], [], "ro", ms=4, label="R-peaks")
         self.ax.legend(loc="upper right")
         self.canvas.figure.tight_layout()
         self.canvas.draw()
 
     def load_ecg(self):
         path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Open ECG data",
-            "",
-            "TXT Files (*.txt);;All Files (*.*)"
+            self, "Open ECG data", "", "TXT Files (*.txt);;All Files (*.*)"
         )
         if not path:
             return
@@ -156,7 +178,10 @@ class Dashboard(QMainWindow):
         try:
             self.ecg_data = self.ecg.process(self.signal)
 
-            self.hrv_data = self.hrv.process(rr_intervals=self.ecg_data["rr_intervals"], rr_time=self.ecg_data["rr_time"])
+            self.hrv_data = self.hrv.process(
+                rr_intervals=self.ecg_data["rr_intervals"],
+                rr_time=self.ecg_data["rr_time"],
+            )
 
             filtered = self.ecg_data["filtered_signal"]
             r_peaks = self.ecg_data["r_peaks"]
@@ -178,19 +203,33 @@ class Dashboard(QMainWindow):
             self.nn20_var.setText(f"NN20: {hrv_time_domain.get('NN20', np.nan)}")
             self.pnn20_var.setText(f"pNN20: {hrv_time_domain.get('pNN20', np.nan):.2f}")
 
-            self.vlf_power_var.setText(f"VLF Power: {hrv_freq_domain.get('VLF_Power', np.nan):.4f}")
-            self.lf_power_var.setText(f"LF Power: {hrv_freq_domain.get('LF_Power', np.nan):.4f}")
-            self.hf_power_var.setText(f"HF Power: {hrv_freq_domain.get('HF_Power', np.nan):.4f}")
-            self.total_power_var.setText(f"Total Power: {hrv_freq_domain.get('Total_Power', np.nan):.4f}")
-            self.lf_norm_var.setText(f"LF (nu): {hrv_freq_domain.get('LF_(nu)', np.nan):.2f}")
-            self.hf_norm_var.setText(f"HF (nu): {hrv_freq_domain.get('HF_(nu)', np.nan):.2f}")
+            self.vlf_power_var.setText(
+                f"VLF Power: {hrv_freq_domain.get('VLF_Power', np.nan):.4f}"
+            )
+            self.lf_power_var.setText(
+                f"LF Power: {hrv_freq_domain.get('LF_Power', np.nan):.4f}"
+            )
+            self.hf_power_var.setText(
+                f"HF Power: {hrv_freq_domain.get('HF_Power', np.nan):.4f}"
+            )
+            self.total_power_var.setText(
+                f"Total Power: {hrv_freq_domain.get('Total_Power', np.nan):.4f}"
+            )
+            self.lf_norm_var.setText(
+                f"LF (nu): {hrv_freq_domain.get('LF_(nu)', np.nan):.2f}"
+            )
+            self.hf_norm_var.setText(
+                f"HF (nu): {hrv_freq_domain.get('HF_(nu)', np.nan):.2f}"
+            )
             self.lf_hf_var.setText(f"LF/HF: {hrv_freq_domain.get('LF/HF', np.nan):.2f}")
 
             self.std_var.setText(f"STD: {hrv_nonlinear.get('STD', np.nan):.4f}")
             self.sdsd_var.setText(f"SDSD: {hrv_nonlinear.get('SDSD', np.nan):.4f}")
             self.sd2_var.setText(f"SD2: {hrv_nonlinear.get('SD2', np.nan):.4f}")
             self.sd1_var.setText(f"SD1: {hrv_nonlinear.get('SD1', np.nan):.4f}")
-            self.sd2_sd1_var.setText(f"SD2/SD1: {hrv_nonlinear.get('SD2/SD1', np.nan):.4f}")
+            self.sd2_sd1_var.setText(
+                f"SD2/SD1: {hrv_nonlinear.get('SD2/SD1', np.nan):.4f}"
+            )
 
             self.rpeaks_var.setText(f"R-peaks: {len(r_peaks)}")
             self.status_label.setText("ECG processed successfully")
@@ -219,5 +258,3 @@ class Dashboard(QMainWindow):
         self.ax.legend(loc="upper right")
         self.canvas.figure.tight_layout()
         self.canvas.draw()
-
-
