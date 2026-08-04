@@ -48,6 +48,21 @@ class HRV_base(ABC):
         pass
 
     @abstractmethod
+    def frequencyAnalysis(
+        self, rr_intervals: np.ndarray, rr_time: np.ndarray
+    ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Abstract method to perform frequency analysis on RR intervals.
+        Parameters:
+        rr_intervals (np.ndarray): The RR intervals array.
+        rr_time (np.ndarray): The timestamps for RR intervals.
+
+        Returns:
+        tuple[np.ndarray, np.ndarray]: A tuple containing frequency and power arrays.
+        """
+        pass
+
+    @abstractmethod
     def frequency_domain_features(
         self, freqs: np.ndarray, power: np.ndarray
     ) -> Dict[str, Any]:

@@ -61,8 +61,7 @@ class HRV:
             self.algorithm = HRVAlgorithm(self.config)
 
         # Store processing results (None until process() is called)
-        self._rr_intervals: Optional[np.ndarray] = None
-        self._rr_time: Optional[np.ndarray] = None
+        self._heart_rate: Optional[Dict[str, float]] = None
         self._freq: Optional[np.ndarray] = None
         self._power: Optional[np.ndarray] = None
         self._time_features: Optional[Dict[str, Any]] = None
@@ -71,10 +70,8 @@ class HRV:
 
     def process(
         self,
-        rr_intervals: np.ndarray = None,
-        rr_time: np.ndarray = None,
-        r_peaks: np.ndarray = None,
-        remove_ectopy: bool = True,
+        rr_intervals: Optional[np.ndarray] = None,
+        rr_time: Optional[np.ndarray] = None,
     ) -> Dict[str, Any]:
         """
         Process RR intervals and extract HRV metrics.
@@ -111,32 +108,14 @@ class HRV:
         ValueError
             If no valid input is provided
         """
+
+
         # Validate input
-        if rr_intervals is None and r_peaks is None:
-            raise ValueError("Either rr_intervals or r_peaks must be provided")
+        if rr_intervals is None:
+            raise ValueError("rr_intervals must be provided")
 
-        # Compute RR intervals if r_peaks given
-        if r_peaks is not None:
-            # If your algorithm.rr_intervals expects (r_peaks) and returns intervals+time,
-            # adapt this call accordingly. Here we assume it returns (rr, rr_time).
-            rr_intervals, rr_time = self.algorithm.rr_intervals(r_peaks)
-        elif rr_intervals is not None and rr_time is None:
-            # Fallback: generate synthetic time axis if only intervals given
-            rr_intervals = np.asarray(rr_intervals, dtype=float)
-            duration = np.sum(rr_intervals)
-            rr_time = np.linspace(0, duration, len(rr_intervals))
-
-        # Optional ectopic beat removal
-        if remove_ectopy:
-            rr_intervals = self.algorithm.remove_ectopy_beats(rr_intervals)
-            # Optionally recompute rr_time for kept beats; if you don't have
-            # a direct mapping, you can keep the original rr_time and mask it.
-            # For simplicity here, we just recompute a synthetic time axis:
-            duration = np.sum(rr_intervals)
-            rr_time = np.linspace(0, duration, len(rr_intervals))
-
-        self._rr_intervals = rr_intervals
-        self._rr_time = rr_time
+        heart_rate = self.algorithm.heart_rate(rr_intervals)
+        self._heart_rate = heart_rate
 
         # Time-domain features
         time_features = self.algorithm.time_domain_features(rr_intervals)
@@ -158,6 +137,7 @@ class HRV:
         return {
             "rr_intervals": rr_intervals,
             "rr_time": rr_time,
+            "heart_rate": heart_rate,
             "time_features": time_features,
             "frequency_features": freq_features,
             "nonlinear_features": nonlinear_features,

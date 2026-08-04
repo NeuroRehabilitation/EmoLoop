@@ -158,7 +158,7 @@ class HRVAlgorithm(HRV_base):
             return np.array([]), np.array([])
 
         t_new = np.arange(
-            rr_time[0], rr_intervals[-1], 1.0 / self.config.interpolation_rate
+            rr_time[0], rr_time[-1], 1.0 / self.config.interpolation_rate
         )
 
         tck = sc.interpolate.splrep(rr_time, rr_intervals, s=0)
@@ -171,6 +171,7 @@ class HRVAlgorithm(HRV_base):
             window=sc.signal.get_window(self.config.window, min(len(rr_even), 1000)),
             nperseg=min(len(rr_even), 1000),
         )
+
 
         mask = freq_axis < 0.5
         return freq_axis[mask], power_axis[mask]
@@ -188,12 +189,12 @@ class HRVAlgorithm(HRV_base):
 
         def band_power(fmin, fmax):
             idx = (freqs >= fmin) & (freqs < fmax)
-            return sc.integrate.trapz(power[idx], freqs[idx]) if np.any(idx) else np.nan
+            return sc.integrate.trapezoid(power[idx], freqs[idx]) if np.any(idx) else np.nan
 
-        vlf = band_power(self.config.vlf_lfreq, self.config.vlf_hfreq)
-        lf = band_power(self.config.lf_lfreq, self.config.lf_hfreq)
-        hf = band_power(self.config.hf_lfreq, self.config.hf_hfreq)
-        total_power = band_power(self.config.vlf_lfreq, self.config.hf_hfreq)
+        vlf = float(band_power(self.config.vlf_lfreq, self.config.vlf_hfreq))
+        lf = float(band_power(self.config.lf_lfreq, self.config.lf_hfreq))
+        hf = float(band_power(self.config.hf_lfreq, self.config.hf_hfreq))
+        total_power = float(band_power(self.config.vlf_lfreq, self.config.hf_hfreq))
 
         if np.isfinite(total_power) and (total_power - vlf) > 0:
             lf_norm = lf / (total_power - vlf) * 100
@@ -209,36 +210,34 @@ class HRVAlgorithm(HRV_base):
         )
 
         return {
-            "VLF_Power": [vlf],
-            "LF_Power": [lf],
-            "HF_Power": [hf],
-            "Total_Power": [total_power],
-            "LF_(nu)": [lf_norm],
-            "HF_(nu)": [hf_norm],
-            "LF/HF": [ratio],
+            "VLF_Power": vlf,
+            "LF_Power": lf,
+            "HF_Power": hf,
+            "Total_Power": total_power,
+            "LF_(nu)": lf_norm,
+            "HF_(nu)": hf_norm,
+            "LF/HF": ratio,
         }
 
     def non_linear_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
         STD = round(float(np.std(rr_intervals)), 4)
-        SDSD = self.SDSD(rr_intervals)
-        SD2 = self.SD2(SDSD, STD)
-        SD1 = self.SD1(SDSD)
-        SD2_SD1 = self.SD2_SD1(SD1, SD2)
+        SDSD = float(self.SDSD(rr_intervals))
+        SD2 = float(self.SD2(SDSD, STD))
+        SD1 = float(self.SD1(SDSD))
+        SD2_SD1 = float(self.SD2_SD1(SD1, SD2))
 
         return {
-            "STD": [STD],
-            "SDSD": [SDSD],
-            "SD2": [SD2],
-            "SD1": [SD1],
-            "SD2/SD1": [SD2_SD1],
+            "STD": STD,
+            "SDSD": SDSD,
+            "SD2": SD2,
+            "SD1": SD1,
+            "SD2/SD1": SD2_SD1,
         }
 
     @staticmethod
     def SDSD(rr_intervals: np.ndarray) -> float:
         diff_rr = np.diff(rr_intervals)
-        return (
-            float(round(np.std(diff_rr) * 1000, 4)) if rr_intervals.size < 2 else np.nan
-        )
+        return float(round(np.std(diff_rr), 4)) if rr_intervals.size >= 2 else np.nan
 
     @staticmethod
     def SD2(SDSD: float, STD: float) -> float:
