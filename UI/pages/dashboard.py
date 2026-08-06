@@ -55,14 +55,10 @@ class Dashboard(QMainWindow):
         # Left metrics panel
         # ==================================================
         self.metrics_panel = QFrame()
-        self.metrics_panel.setFrameShape(
-            QFrame.StyledPanel
-        )
+        self.metrics_panel.setFrameShape(QFrame.StyledPanel)
         self.metrics_panel.setFixedWidth(280)
 
-        metrics_layout = QVBoxLayout(
-            self.metrics_panel
-        )
+        metrics_layout = QVBoxLayout(self.metrics_panel)
         metrics_layout.setContentsMargins(
             8,
             8,
@@ -71,109 +67,51 @@ class Dashboard(QMainWindow):
         )
         metrics_layout.setSpacing(4)
 
-        self.load_btn = QPushButton(
-            "Load ECG Data"
-        )
+        self.load_btn = QPushButton("Load ECG Data")
 
-        self.process_btn = QPushButton(
-            "Process HRV"
-        )
+        self.process_btn = QPushButton("Process HRV")
 
-        self.load_btn.clicked.connect(
-            self.load_ecg
-        )
+        self.load_btn.clicked.connect(self.load_ecg)
 
-        self.process_btn.clicked.connect(
-            self.process
-        )
+        self.process_btn.clicked.connect(self.process)
 
-        metrics_layout.addWidget(
-            self.load_btn
-        )
+        metrics_layout.addWidget(self.load_btn)
 
-        metrics_layout.addWidget(
-            self.process_btn
-        )
+        metrics_layout.addWidget(self.process_btn)
 
         metrics_layout.addSpacing(10)
 
         # Heart-rate metrics
-        self.avg_hr_var = QLabel(
-            "Avg HR: --"
-        )
-        self.min_hr_var = QLabel(
-            "Min HR: --"
-        )
-        self.max_hr_var = QLabel(
-            "Max HR: --"
-        )
-        self.hr_std_var = QLabel(
-            "Std HR: --"
-        )
+        self.avg_hr_var = QLabel("Avg HR: --")
+        self.min_hr_var = QLabel("Min HR: --")
+        self.max_hr_var = QLabel("Max HR: --")
+        self.hr_std_var = QLabel("Std HR: --")
 
         # Time-domain metrics
-        self.sdnn_var = QLabel(
-            "SDNN: --"
-        )
-        self.rmssd_var = QLabel(
-            "RMSSD: --"
-        )
-        self.nn50_var = QLabel(
-            "NN50: --"
-        )
-        self.pnn50_var = QLabel(
-            "pNN50: --"
-        )
-        self.nn20_var = QLabel(
-            "NN20: --"
-        )
-        self.pnn20_var = QLabel(
-            "pNN20: --"
-        )
+        self.sdnn_var = QLabel("SDNN: --")
+        self.rmssd_var = QLabel("RMSSD: --")
+        self.nn50_var = QLabel("NN50: --")
+        self.pnn50_var = QLabel("pNN50: --")
+        self.nn20_var = QLabel("NN20: --")
+        self.pnn20_var = QLabel("pNN20: --")
 
         # Frequency-domain metrics
-        self.vlf_power_var = QLabel(
-            "VLF Power: --"
-        )
-        self.lf_power_var = QLabel(
-            "LF Power: --"
-        )
-        self.hf_power_var = QLabel(
-            "HF Power: --"
-        )
-        self.total_power_var = QLabel(
-            "Total Power: --"
-        )
-        self.lf_norm_var = QLabel(
-            "LF (nu): --"
-        )
-        self.hf_norm_var = QLabel(
-            "HF (nu): --"
-        )
-        self.lf_hf_var = QLabel(
-            "LF/HF: --"
-        )
+        self.vlf_power_var = QLabel("VLF Power: --")
+        self.lf_power_var = QLabel("LF Power: --")
+        self.hf_power_var = QLabel("HF Power: --")
+        self.total_power_var = QLabel("Total Power: --")
+        self.lf_norm_var = QLabel("LF (nu): --")
+        self.hf_norm_var = QLabel("HF (nu): --")
+        self.lf_hf_var = QLabel("LF/HF: --")
 
         # Nonlinear metrics
-        self.std_var = QLabel(
-            "STD: --"
-        )
-        self.sdsd_var = QLabel(
-            "SDSD: --"
-        )
-        self.sd2_var = QLabel(
-            "SD2: --"
-        )
-        self.sd1_var = QLabel(
-            "SD1: --"
-        )
-        self.sd2_sd1_var = QLabel(
-            "SD2/SD1: --"
-        )
+        self.std_var = QLabel("STD: --")
+        self.sdsd_var = QLabel("SDSD: --")
+        self.sd2_var = QLabel("SD2: --")
+        self.sd1_var = QLabel("SD1: --")
+        self.sd2_sd1_var = QLabel("SD2/SD1: --")
 
-        self.rpeaks_var = QLabel(
-            "R-peaks: --"
-        )
+        self.rpeaks_var = QLabel("R-peaks: --")
 
         self.metric_labels = [
             self.avg_hr_var,
@@ -202,12 +140,8 @@ class Dashboard(QMainWindow):
         ]
 
         for label in self.metric_labels:
-            label.setAlignment(
-                Qt.AlignLeft
-            )
-            metrics_layout.addWidget(
-                label
-            )
+            label.setAlignment(Qt.AlignLeft)
+            metrics_layout.addWidget(label)
 
         metrics_layout.addStretch(1)
 
@@ -219,27 +153,19 @@ class Dashboard(QMainWindow):
             0,
         )
 
-        left_container.addWidget(
-            self.metrics_panel
-        )
+        left_container.addWidget(self.metrics_panel)
 
         left_widget = QWidget()
-        left_widget.setLayout(
-            left_container
-        )
+        left_widget.setLayout(left_container)
         left_widget.setMaximumWidth(320)
 
         # ==================================================
         # Main plot panel
         # ==================================================
         self.plot_panel = QFrame()
-        self.plot_panel.setFrameShape(
-            QFrame.StyledPanel
-        )
+        self.plot_panel.setFrameShape(QFrame.StyledPanel)
 
-        plot_layout = QVBoxLayout(
-            self.plot_panel
-        )
+        plot_layout = QVBoxLayout(self.plot_panel)
         plot_layout.setContentsMargins(
             8,
             8,
@@ -256,9 +182,7 @@ class Dashboard(QMainWindow):
             dpi=100,
         )
 
-        self.ecg_canvas = FigureCanvas(
-            self.ecg_figure
-        )
+        self.ecg_canvas = FigureCanvas(self.ecg_figure)
 
         self.ecg_canvas.setFixedSize(
             1200,
@@ -270,20 +194,12 @@ class Dashboard(QMainWindow):
             self,
         )
 
-        self.ecg_toolbar.setFixedWidth(
-            self.ecg_canvas.width()
-        )
+        self.ecg_toolbar.setFixedWidth(self.ecg_canvas.width())
 
-        self.ecg_ax = (
-            self.ecg_figure.add_subplot(111)
-        )
+        self.ecg_ax = self.ecg_figure.add_subplot(111)
 
-        ecg_title = QLabel(
-            "ECG Signal"
-        )
-        ecg_title.setAlignment(
-            Qt.AlignHCenter
-        )
+        ecg_title = QLabel("ECG Signal")
+        ecg_title.setAlignment(Qt.AlignHCenter)
 
         plot_layout.addWidget(
             ecg_title,
@@ -308,9 +224,7 @@ class Dashboard(QMainWindow):
             dpi=100,
         )
 
-        self.poincare_canvas = FigureCanvas(
-            self.poincare_figure
-        )
+        self.poincare_canvas = FigureCanvas(self.poincare_figure)
 
         self.poincare_canvas.setFixedSize(
             580,
@@ -322,13 +236,9 @@ class Dashboard(QMainWindow):
             self,
         )
 
-        self.poincare_toolbar.setFixedWidth(
-            self.poincare_canvas.width()
-        )
+        self.poincare_toolbar.setFixedWidth(self.poincare_canvas.width())
 
-        self.poincare_ax = (
-            self.poincare_figure.add_subplot(111)
-        )
+        self.poincare_ax = self.poincare_figure.add_subplot(111)
 
         # ==================================================
         # Frequency-power figure
@@ -338,9 +248,7 @@ class Dashboard(QMainWindow):
             dpi=100,
         )
 
-        self.frequency_canvas = FigureCanvas(
-            self.frequency_figure
-        )
+        self.frequency_canvas = FigureCanvas(self.frequency_figure)
 
         self.frequency_canvas.setFixedSize(
             580,
@@ -352,13 +260,9 @@ class Dashboard(QMainWindow):
             self,
         )
 
-        self.frequency_toolbar.setFixedWidth(
-            self.frequency_canvas.width()
-        )
+        self.frequency_toolbar.setFixedWidth(self.frequency_canvas.width())
 
-        self.frequency_ax = (
-            self.frequency_figure.add_subplot(111)
-        )
+        self.frequency_ax = self.frequency_figure.add_subplot(111)
 
         # ==================================================
         # Side-by-side Poincaré/frequency layout
@@ -375,9 +279,7 @@ class Dashboard(QMainWindow):
         # Poincaré container
         poincare_widget = QWidget()
 
-        poincare_layout = QVBoxLayout(
-            poincare_widget
-        )
+        poincare_layout = QVBoxLayout(poincare_widget)
         poincare_layout.setContentsMargins(
             0,
             0,
@@ -386,12 +288,8 @@ class Dashboard(QMainWindow):
         )
         poincare_layout.setSpacing(4)
 
-        poincare_title = QLabel(
-            "Poincaré Plot"
-        )
-        poincare_title.setAlignment(
-            Qt.AlignHCenter
-        )
+        poincare_title = QLabel("Poincaré Plot")
+        poincare_title.setAlignment(Qt.AlignHCenter)
 
         poincare_layout.addWidget(
             poincare_title,
@@ -411,9 +309,7 @@ class Dashboard(QMainWindow):
         # Frequency container
         frequency_widget = QWidget()
 
-        frequency_layout = QVBoxLayout(
-            frequency_widget
-        )
+        frequency_layout = QVBoxLayout(frequency_widget)
         frequency_layout.setContentsMargins(
             0,
             0,
@@ -422,12 +318,8 @@ class Dashboard(QMainWindow):
         )
         frequency_layout.setSpacing(4)
 
-        frequency_title = QLabel(
-            "HRV Frequency-Band Power"
-        )
-        frequency_title.setAlignment(
-            Qt.AlignHCenter
-        )
+        frequency_title = QLabel("HRV Frequency-Band Power")
+        frequency_title.setAlignment(Qt.AlignHCenter)
 
         frequency_layout.addWidget(
             frequency_title,
@@ -445,89 +337,64 @@ class Dashboard(QMainWindow):
         )
 
         # Add both containers horizontally
-        side_by_side_layout.addWidget(
-            poincare_widget
-        )
+        side_by_side_layout.addWidget(poincare_widget)
 
-        side_by_side_layout.addWidget(
-            frequency_widget
-        )
+        side_by_side_layout.addWidget(frequency_widget)
 
-        plot_layout.addLayout(
-            side_by_side_layout
-        )
+        plot_layout.addLayout(side_by_side_layout)
 
         # ==================================================
         # Status label
         # ==================================================
-        self.status_label = QLabel(
-            "Ready"
-        )
+        self.status_label = QLabel("Ready")
 
-        self.status_label.setFrameShape(
-            QFrame.Box
-        )
+        self.status_label.setFrameShape(QFrame.Box)
 
-        self.status_label.setAlignment(
-            Qt.AlignLeft | Qt.AlignVCenter
-        )
+        self.status_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-        plot_layout.addWidget(
-            self.status_label
-        )
+        plot_layout.addWidget(self.status_label)
 
         # ==================================================
         # Main layout
         # ==================================================
-        main_layout.addWidget(
-            left_widget
-        )
+        main_layout.addWidget(left_widget)
 
-        main_layout.addWidget(
-            self.plot_panel
-        )
-
+        main_layout.addWidget(self.plot_panel)
 
     def _build_plot(self):
-            # ==================================================
-            # Initial ECG figure
-            # ==================================================
-            self.ecg_ax.set_title("ECG Signal")
-            self.ecg_ax.set_xlabel("Time (s)")
-            self.ecg_ax.set_ylabel("Amplitude")
-            self.ecg_ax.grid(True, alpha=0.3)
+        # ==================================================
+        # Initial ECG figure
+        # ==================================================
+        self.ecg_ax.set_title("ECG Signal")
+        self.ecg_ax.set_xlabel("Time (s)")
+        self.ecg_ax.set_ylabel("Amplitude")
+        self.ecg_ax.grid(True, alpha=0.3)
 
-            self.ecg_figure.tight_layout()
-            self.ecg_canvas.draw()
+        self.ecg_figure.tight_layout()
+        self.ecg_canvas.draw()
 
-            # ==================================================
-            # Initial Poincaré figure
-            # ==================================================
-            self.poincare_ax.set_title("Poincaré Plot")
-            self.poincare_ax.set_xlabel(r"$RR_n$ (s)")
-            self.poincare_ax.set_ylabel(r"$RR_{n+1}$ (s)")
-            self.poincare_ax.grid(True, alpha=0.3)
+        # ==================================================
+        # Initial Poincaré figure
+        # ==================================================
+        self.poincare_ax.set_title("Poincaré Plot")
+        self.poincare_ax.set_xlabel(r"$RR_n$ (s)")
+        self.poincare_ax.set_ylabel(r"$RR_{n+1}$ (s)")
+        self.poincare_ax.grid(True, alpha=0.3)
 
-            self.poincare_figure.tight_layout()
-            self.poincare_canvas.draw()
+        self.poincare_figure.tight_layout()
+        self.poincare_canvas.draw()
 
-            # Frequency-band power figure
-            self.frequency_ax.set_title(
-                "HRV Frequency-Band Power"
-            )
-            self.frequency_ax.set_xlabel(
-                "Frequency band"
-            )
-            self.frequency_ax.set_ylabel(
-                "Power"
-            )
-            self.frequency_ax.grid(
-                axis="y",
-                alpha=0.3,
-            )
+        # Frequency-band power figure
+        self.frequency_ax.set_title("HRV Frequency-Band Power")
+        self.frequency_ax.set_xlabel("Frequency band")
+        self.frequency_ax.set_ylabel("Power")
+        self.frequency_ax.grid(
+            axis="y",
+            alpha=0.3,
+        )
 
-            self.frequency_figure.tight_layout()
-            self.frequency_canvas.draw()
+        self.frequency_figure.tight_layout()
+        self.frequency_canvas.draw()
 
     def load_ecg(self):
         # path, _ = QFileDialog.getOpenFileName(
@@ -537,7 +404,9 @@ class Dashboard(QMainWindow):
         #     return
 
         try:
-            self.data = np.loadtxt(r'C:\Users\Rodrigo\Desktop\PhD\EmoLoop\notebooks\signal_samples\SampleECG.txt')
+            self.data = np.loadtxt(
+                r"C:\Users\Rodrigo\Desktop\PhD\EmoLoop\notebooks\signal_samples\SampleECG.txt"
+            )
             # self.data = np.loadtxt(path)
             self.signal = self.data[:, 2]
             self.time = np.arange(len(self.signal)) / self.ecg.sampling_rate
@@ -610,7 +479,9 @@ class Dashboard(QMainWindow):
             self.rpeaks_var.setText(f"R-peaks: {len(r_peaks)}")
             self.status_label.setText("ECG processed successfully")
 
-            self._update_plot(filtered, r_peaks, rr_intervals=self.ecg_data["rr_intervals"])
+            self._update_plot(
+                filtered, r_peaks, rr_intervals=self.ecg_data["rr_intervals"]
+            )
             self._update_frequency_plot()
 
         except Exception as e:
@@ -669,20 +540,15 @@ class Dashboard(QMainWindow):
         # The SD1 axis is perpendicular to y = x.
         ellipse = Ellipse(
             xy=(mean_rr, mean_rr),
-
             # Matplotlib expects full diameters
             width=2.0 * sd2,
             height=2.0 * sd1,
-
             angle=45.0,
             facecolor="tab:orange",
             edgecolor="tab:red",
             alpha=0.25,
             linewidth=2.0,
-            label=(
-                f"SD1={sd1:.4f} s, "
-                f"SD2={sd2:.4f} s"
-            ),
+            label=(f"SD1={sd1:.4f} s, " f"SD2={sd2:.4f} s"),
         )
 
         self.poincare_ax.add_patch(ellipse)
@@ -700,10 +566,10 @@ class Dashboard(QMainWindow):
         return rr_n, rr_next
 
     def _update_plot(
-            self,
-            signal,
-            r_peaks=None,
-            rr_intervals=None,
+        self,
+        signal,
+        r_peaks=None,
+        rr_intervals=None,
     ):
         if signal is None:
             return
@@ -711,10 +577,7 @@ class Dashboard(QMainWindow):
         # ==================================================
         # Update ECG figure
         # ==================================================
-        t = (
-                np.arange(len(signal))
-                / self.ecg.sampling_rate
-        )
+        t = np.arange(len(signal)) / self.ecg.sampling_rate
 
         self.ecg_ax.clear()
 
@@ -731,10 +594,7 @@ class Dashboard(QMainWindow):
                 dtype=int,
             )
 
-            valid_peaks = (
-                    (r_peaks >= 0)
-                    & (r_peaks < len(signal))
-            )
+            valid_peaks = (r_peaks >= 0) & (r_peaks < len(signal))
 
             r_peaks = r_peaks[valid_peaks]
 
@@ -785,13 +645,9 @@ class Dashboard(QMainWindow):
                 )
 
                 # Only rr_intervals is passed
-                self._add_poincare_ellipse(
-                    rr_intervals
-                )
+                self._add_poincare_ellipse(rr_intervals)
 
-                all_values = np.concatenate(
-                    [rr_n, rr_next]
-                )
+                all_values = np.concatenate([rr_n, rr_next])
 
                 lower = np.min(all_values)
                 upper = np.max(all_values)
@@ -822,28 +678,18 @@ class Dashboard(QMainWindow):
                     plot_upper,
                 )
 
-        self.poincare_ax.set_title(
-            "Poincaré Plot with Ellipse"
-        )
+        self.poincare_ax.set_title("Poincaré Plot with Ellipse")
 
-        self.poincare_ax.set_xlabel(
-            r"$RR_n$ (s)"
-        )
+        self.poincare_ax.set_xlabel(r"$RR_n$ (s)")
 
-        self.poincare_ax.set_ylabel(
-            r"$RR_{n+1}$ (s)"
-        )
+        self.poincare_ax.set_ylabel(r"$RR_{n+1}$ (s)")
 
         self.poincare_ax.grid(True, alpha=0.3)
 
-        handles, labels = (
-            self.poincare_ax.get_legend_handles_labels()
-        )
+        handles, labels = self.poincare_ax.get_legend_handles_labels()
 
         if handles:
-            self.poincare_ax.legend(
-                loc="upper left"
-            )
+            self.poincare_ax.legend(loc="upper left")
 
         self.poincare_figure.tight_layout()
         self.poincare_canvas.draw()
@@ -902,34 +748,23 @@ class Dashboard(QMainWindow):
         self.frequency_ax.bar_label(
             bars,
             labels=[
-                "nan"
-                if not np.isfinite(value)
-                else f"{value:.4f}"
-                for value in values
+                "nan" if not np.isfinite(value) else f"{value:.4f}" for value in values
             ],
             padding=3,
         )
 
-        self.frequency_ax.set_title(
-            "HRV Frequency-Band Power"
-        )
+        self.frequency_ax.set_title("HRV Frequency-Band Power")
 
-        self.frequency_ax.set_xlabel(
-            "Frequency band"
-        )
+        self.frequency_ax.set_xlabel("Frequency band")
 
-        self.frequency_ax.set_ylabel(
-            "Power"
-        )
+        self.frequency_ax.set_ylabel("Power")
 
         self.frequency_ax.grid(
             axis="y",
             alpha=0.3,
         )
 
-        self.frequency_ax.set_axisbelow(
-            True
-        )
+        self.frequency_ax.set_axisbelow(True)
 
         self.frequency_figure.tight_layout()
         self.frequency_canvas.draw()
