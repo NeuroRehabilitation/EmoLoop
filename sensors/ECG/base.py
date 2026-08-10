@@ -24,7 +24,7 @@ class ECG_base(ABC):
         pass
 
     @abstractmethod
-    def rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
+    def rr_intervals(self, r_peaks: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Calculate RR intervals from R-peaks."""
         pass
 

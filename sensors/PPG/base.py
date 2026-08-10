@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Dict, Any
+from typing import Dict, Any, Tuple
 import numpy as np
 
 
@@ -24,7 +24,7 @@ class PPG_base(ABC):
         pass
 
     @abstractmethod
-    def rr_intervals(self, peaks: np.ndarray) -> np.ndarray:
+    def rr_intervals(self, peaksIndex: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Calculate RR intervals from peaks."""
         pass
 

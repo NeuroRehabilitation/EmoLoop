@@ -20,7 +20,7 @@ class PPGAlgorithm(PPG_base):
         highcut: float | None = None,
     ):
         sos = scipy.signal.butter(
-            order, [lowcut, highcut], btype=filter_type, fs=fs, output="sos"
+            order, [highcut, lowcut], btype=filter_type, fs=fs, output="sos"
         )
         return sos
 
@@ -134,8 +134,8 @@ class PPGAlgorithm(PPG_base):
     @staticmethod
     def validatePeaksPPG(
         paired_data: Dict[str, np.ndarray],
-        threshold: float = 0.7,
-        window: int = 5,
+        threshold,
+        window,
     ) -> Dict[str, np.ndarray]:
         peaksAmp = paired_data["PeaksAmp"]
         peaksIndex = paired_data["PairedPeaks"]
@@ -178,15 +178,17 @@ class PPGAlgorithm(PPG_base):
 
         validated_data = self.validatePeaksPPG(
             paired_data=paired_data,
-            threshold=0.7,
-            window=5,
+            threshold=self.config.threshold,
+            window=self.config.window,
         )
 
         return validated_data["PeaksIndex"]
 
-    def rr_intervals(self, peaks: np.ndarray) -> np.ndarray:
-        # Implement RR interval calculation logic here
-        pass
+    def rr_intervals(self, peaksIndex: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+
+        rr_intervals = np.diff(peaksIndex) / self.config.sampling_rate
+        rr_time = peaksIndex[1:] / self.config.sampling_rate
+        return rr_intervals, rr_time
 
     def get_config(self) -> Dict[str, Any]:
         return self.config.__dict__

@@ -278,7 +278,7 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return R[R >= min_start]
 
-    def rr_intervals(self, r_peaks: np.ndarray) -> np.ndarray:
+    def rr_intervals(self, r_peaks: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """Calculate RR intervals from R-peaks."""
 
         rr_intervals = np.diff(r_peaks) / self.config.sampling_rate
