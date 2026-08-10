@@ -65,6 +65,10 @@ class HRVAlgorithm(HRV_base):
     def time_domain_features(self, rr_intervals: np.ndarray) -> Dict[str, Any]:
         if rr_intervals.size == 0:
             return {
+                "Avg RR": np.nan,
+                "Min RR": np.nan,
+                "Max RR": np.nan,
+                "SD RR": np.nan,
                 "SDNN": np.nan,
                 "RMSSD": np.nan,
                 "NN50": np.nan,
@@ -77,6 +81,10 @@ class HRVAlgorithm(HRV_base):
         nn20 = self.NN20(rr_intervals)
 
         return {
+            "Avg RR": float(np.nanmean(rr_intervals)*1000),
+            "Min RR": float(np.nanmin(rr_intervals)*1000),
+            "Max RR": float(np.nanmax(rr_intervals)*1000),
+            "SD RR": float(np.nanstd(rr_intervals)*1000),
             "SDNN": self.SDNN(rr_intervals),
             "RMSSD": self.RMSSD(rr_intervals),
             "NN50": nn50,
@@ -192,10 +200,10 @@ class HRVAlgorithm(HRV_base):
                 else np.nan
             )
 
-        vlf = float(band_power(self.config.vlf_lfreq, self.config.vlf_hfreq))
-        lf = float(band_power(self.config.lf_lfreq, self.config.lf_hfreq))
-        hf = float(band_power(self.config.hf_lfreq, self.config.hf_hfreq))
-        total_power = float(band_power(self.config.vlf_lfreq, self.config.hf_hfreq))
+        vlf = float(band_power(self.config.vlf_lfreq, self.config.vlf_hfreq)*pow(10, 6))
+        lf = float(band_power(self.config.lf_lfreq, self.config.lf_hfreq)*pow(10, 6))
+        hf = float(band_power(self.config.hf_lfreq, self.config.hf_hfreq)*pow(10, 6))
+        total_power = float(band_power(self.config.vlf_lfreq, self.config.hf_hfreq)*pow(10, 6))
 
         if np.isfinite(total_power) and (total_power - vlf) > 0:
             lf_norm = lf / (total_power - vlf) * 100
@@ -242,11 +250,11 @@ class HRVAlgorithm(HRV_base):
 
     @staticmethod
     def SD2(SDSD: float, STD: float) -> float:
-        return float(round(np.sqrt(2 * STD**2 - 0.5 * SDSD**2), 4) * 1000)
+        return float(round(np.sqrt(2 * STD**2 - 0.5 * SDSD**2)* 1000, 2))
 
     @staticmethod
     def SD1(SDSD: float) -> float:
-        return float(round(np.sqrt(0.5 * SDSD**2), 4) * 1000)
+        return float(round(np.sqrt(0.5 * SDSD**2) * 1000, 2))
 
     @staticmethod
     def SD2_SD1(SD1: float, SD2: float) -> float:

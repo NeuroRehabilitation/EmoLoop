@@ -88,6 +88,10 @@ class Dashboard(QMainWindow):
         self.hr_std_var = QLabel("Std HR: --")
 
         # Time-domain metrics
+        self.avg_rr_var = QLabel("Avg RR: --")
+        self.min_rr_var = QLabel("Min RR: --")
+        self.max_rr_var = QLabel("Max RR: --")
+        self.sd_rr_var = QLabel("SD RR: --")
         self.sdnn_var = QLabel("SDNN: --")
         self.rmssd_var = QLabel("RMSSD: --")
         self.nn50_var = QLabel("NN50: --")
@@ -118,6 +122,10 @@ class Dashboard(QMainWindow):
             self.min_hr_var,
             self.max_hr_var,
             self.hr_std_var,
+            self.avg_rr_var,
+            self.min_rr_var,
+            self.max_rr_var,
+            self.sd_rr_var,
             self.sdnn_var,
             self.rmssd_var,
             self.nn50_var,
@@ -384,13 +392,61 @@ class Dashboard(QMainWindow):
         self.poincare_figure.tight_layout()
         self.poincare_canvas.draw()
 
+        # ==================================================
         # Frequency-band power figure
-        self.frequency_ax.set_title("HRV Frequency-Band Power")
-        self.frequency_ax.set_xlabel("Frequency band")
-        self.frequency_ax.set_ylabel("Power")
+        # ==================================================
+        labels = [
+            "VLF (0.0033-0.04 Hz)",
+            "LF (0.04-0.15 Hz)",
+            "HF (0.15-0.4 Hz)",
+        ]
+
+        # Initially empty bars
+        initial_values = [
+            0.0,
+            0.0,
+            0.0,
+        ]
+
+        self.frequency_bars = (
+            self.frequency_ax.bar(
+                labels,
+                initial_values,
+                width=0.6,
+                color=[
+                    "tab:blue",
+                    "tab:red",
+                    "tab:green",
+                ],
+                alpha=0.65,
+            )
+        )
+
+        self.frequency_ax.set_title(
+            "HRV Frequency-Band Power"
+        )
+
+        self.frequency_ax.set_xlabel(
+            "Frequency band (Hz)"
+        )
+
+        self.frequency_ax.set_ylabel(
+            r"Power (ms$^2$)"
+        )
+
         self.frequency_ax.grid(
             axis="y",
             alpha=0.3,
+        )
+
+        self.frequency_ax.set_axisbelow(
+            True
+        )
+
+        # Make long labels readable
+        self.frequency_ax.tick_params(
+            axis="x",
+            labelrotation=20,
         )
 
         self.frequency_figure.tight_layout()
@@ -441,24 +497,28 @@ class Dashboard(QMainWindow):
             self.max_hr_var.setText(f"Max HR: {hr.get('Max HR', np.nan):.2f} bpm")
             self.hr_std_var.setText(f"Std HR: {hr.get('SD HR', np.nan):.2f} bpm")
 
-            self.sdnn_var.setText(f"SDNN: {hrv_time_domain.get('SDNN', np.nan):.4f}")
-            self.rmssd_var.setText(f"RMSSD: {hrv_time_domain.get('RMSSD', np.nan):.4f}")
+            self.avg_rr_var.setText(f"Avg RR: {hrv_time_domain.get('Avg RR', np.nan):.2f} ms")
+            self.min_rr_var.setText(f"Min RR: {hrv_time_domain.get('Min RR', np.nan):.2f} ms")
+            self.max_rr_var.setText(f"Max RR: {hrv_time_domain.get('Max RR', np.nan):.2f} ms")
+            self.sd_rr_var.setText(f"SD RR: {hrv_time_domain.get('SD RR', np.nan):.2f} ms")
+            self.sdnn_var.setText(f"SDNN: {hrv_time_domain.get('SDNN', np.nan):.2f} ms")
+            self.rmssd_var.setText(f"RMSSD: {hrv_time_domain.get('RMSSD', np.nan):.2f} ms")
             self.nn50_var.setText(f"NN50: {hrv_time_domain.get('NN50', np.nan)}")
-            self.pnn50_var.setText(f"pNN50: {hrv_time_domain.get('pNN50', np.nan):.2f}")
+            self.pnn50_var.setText(f"pNN50: {hrv_time_domain.get('pNN50', np.nan):.2f} %")
             self.nn20_var.setText(f"NN20: {hrv_time_domain.get('NN20', np.nan)}")
-            self.pnn20_var.setText(f"pNN20: {hrv_time_domain.get('pNN20', np.nan):.2f}")
+            self.pnn20_var.setText(f"pNN20: {hrv_time_domain.get('pNN20', np.nan):.2f} %")
 
             self.vlf_power_var.setText(
-                f"VLF Power: {hrv_freq_domain.get('VLF_Power', np.nan):.4f}"
+                f"VLF Power: {hrv_freq_domain.get('VLF_Power', np.nan):.2f} ms²"
             )
             self.lf_power_var.setText(
-                f"LF Power: {hrv_freq_domain.get('LF_Power', np.nan):.4f}"
+                f"LF Power: {hrv_freq_domain.get('LF_Power', np.nan):.2f} ms²"
             )
             self.hf_power_var.setText(
-                f"HF Power: {hrv_freq_domain.get('HF_Power', np.nan):.4f}"
+                f"HF Power: {hrv_freq_domain.get('HF_Power', np.nan):.2f} ms²"
             )
             self.total_power_var.setText(
-                f"Total Power: {hrv_freq_domain.get('Total_Power', np.nan):.4f}"
+                f"Total Power: {hrv_freq_domain.get('Total_Power', np.nan):.2f} ms²"
             )
             self.lf_norm_var.setText(
                 f"LF (nu): {hrv_freq_domain.get('LF_(nu)', np.nan):.2f}"
@@ -468,12 +528,12 @@ class Dashboard(QMainWindow):
             )
             self.lf_hf_var.setText(f"LF/HF: {hrv_freq_domain.get('LF/HF', np.nan):.2f}")
 
-            self.std_var.setText(f"STD: {hrv_nonlinear.get('STD', np.nan):.4f}")
-            self.sdsd_var.setText(f"SDSD: {hrv_nonlinear.get('SDSD', np.nan):.4f}")
-            self.sd2_var.setText(f"SD2: {hrv_nonlinear.get('SD2', np.nan):.4f}")
-            self.sd1_var.setText(f"SD1: {hrv_nonlinear.get('SD1', np.nan):.4f}")
+            self.std_var.setText(f"STD: {hrv_nonlinear.get('STD', np.nan):.2f} s")
+            self.sdsd_var.setText(f"SDSD: {hrv_nonlinear.get('SDSD', np.nan):.2f} s")
+            self.sd2_var.setText(f"SD2: {hrv_nonlinear.get('SD2', np.nan):.2f} ms")
+            self.sd1_var.setText(f"SD1: {hrv_nonlinear.get('SD1', np.nan):.2f} ms")
             self.sd2_sd1_var.setText(
-                f"SD2/SD1: {hrv_nonlinear.get('SD2/SD1', np.nan):.4f}"
+                f"SD2/SD1: {hrv_nonlinear.get('SD2/SD1', np.nan):.2f}"
             )
 
             self.rpeaks_var.setText(f"R-peaks: {len(r_peaks)}")
@@ -703,9 +763,9 @@ class Dashboard(QMainWindow):
         )
 
         labels = [
-            "VLF",
-            "LF",
-            "HF",
+            "VLF (0.0033-0.04 Hz)",
+            "LF (0.04-0.15 Hz)",
+            "HF (0.15-0.4 Hz)",
         ]
 
         values = np.asarray(
@@ -755,9 +815,9 @@ class Dashboard(QMainWindow):
 
         self.frequency_ax.set_title("HRV Frequency-Band Power")
 
-        self.frequency_ax.set_xlabel("Frequency band")
+        self.frequency_ax.set_xlabel("Frequency band (Hz)")
 
-        self.frequency_ax.set_ylabel("Power")
+        self.frequency_ax.set_ylabel("Power (ms²)")
 
         self.frequency_ax.grid(
             axis="y",
