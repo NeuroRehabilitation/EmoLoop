@@ -408,40 +408,30 @@ class Dashboard(QMainWindow):
             0.0,
         ]
 
-        self.frequency_bars = (
-            self.frequency_ax.bar(
-                labels,
-                initial_values,
-                width=0.6,
-                color=[
-                    "tab:blue",
-                    "tab:red",
-                    "tab:green",
-                ],
-                alpha=0.65,
-            )
+        self.frequency_bars = self.frequency_ax.bar(
+            labels,
+            initial_values,
+            width=0.6,
+            color=[
+                "tab:blue",
+                "tab:red",
+                "tab:green",
+            ],
+            alpha=0.65,
         )
 
-        self.frequency_ax.set_title(
-            "HRV Frequency-Band Power"
-        )
+        self.frequency_ax.set_title("HRV Frequency-Band Power")
 
-        self.frequency_ax.set_xlabel(
-            "Frequency band (Hz)"
-        )
+        self.frequency_ax.set_xlabel("Frequency band (Hz)")
 
-        self.frequency_ax.set_ylabel(
-            r"Power (ms$^2$)"
-        )
+        self.frequency_ax.set_ylabel(r"Power (ms$^2$)")
 
         self.frequency_ax.grid(
             axis="y",
             alpha=0.3,
         )
 
-        self.frequency_ax.set_axisbelow(
-            True
-        )
+        self.frequency_ax.set_axisbelow(True)
 
         # Make long labels readable
         self.frequency_ax.tick_params(
@@ -497,16 +487,30 @@ class Dashboard(QMainWindow):
             self.max_hr_var.setText(f"Max HR: {hr.get('Max HR', np.nan):.2f} bpm")
             self.hr_std_var.setText(f"Std HR: {hr.get('SD HR', np.nan):.2f} bpm")
 
-            self.avg_rr_var.setText(f"Avg RR: {hrv_time_domain.get('Avg RR', np.nan):.2f} ms")
-            self.min_rr_var.setText(f"Min RR: {hrv_time_domain.get('Min RR', np.nan):.2f} ms")
-            self.max_rr_var.setText(f"Max RR: {hrv_time_domain.get('Max RR', np.nan):.2f} ms")
-            self.sd_rr_var.setText(f"SD RR: {hrv_time_domain.get('SD RR', np.nan):.2f} ms")
+            self.avg_rr_var.setText(
+                f"Avg RR: {hrv_time_domain.get('Avg RR', np.nan):.2f} ms"
+            )
+            self.min_rr_var.setText(
+                f"Min RR: {hrv_time_domain.get('Min RR', np.nan):.2f} ms"
+            )
+            self.max_rr_var.setText(
+                f"Max RR: {hrv_time_domain.get('Max RR', np.nan):.2f} ms"
+            )
+            self.sd_rr_var.setText(
+                f"SD RR: {hrv_time_domain.get('SD RR', np.nan):.2f} ms"
+            )
             self.sdnn_var.setText(f"SDNN: {hrv_time_domain.get('SDNN', np.nan):.2f} ms")
-            self.rmssd_var.setText(f"RMSSD: {hrv_time_domain.get('RMSSD', np.nan):.2f} ms")
+            self.rmssd_var.setText(
+                f"RMSSD: {hrv_time_domain.get('RMSSD', np.nan):.2f} ms"
+            )
             self.nn50_var.setText(f"NN50: {hrv_time_domain.get('NN50', np.nan)}")
-            self.pnn50_var.setText(f"pNN50: {hrv_time_domain.get('pNN50', np.nan):.2f} %")
+            self.pnn50_var.setText(
+                f"pNN50: {hrv_time_domain.get('pNN50', np.nan):.2f} %"
+            )
             self.nn20_var.setText(f"NN20: {hrv_time_domain.get('NN20', np.nan)}")
-            self.pnn20_var.setText(f"pNN20: {hrv_time_domain.get('pNN20', np.nan):.2f} %")
+            self.pnn20_var.setText(
+                f"pNN20: {hrv_time_domain.get('pNN20', np.nan):.2f} %"
+            )
 
             self.vlf_power_var.setText(
                 f"VLF Power: {hrv_freq_domain.get('VLF_Power', np.nan):.2f} ms²"
