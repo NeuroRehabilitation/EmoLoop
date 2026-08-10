@@ -6,13 +6,22 @@ from sensors.PPG.config import PPG_Config
 import numpy as np
 import scipy
 
+
 class PPGAlgorithm(PPG_base):
     def __init__(self, config: PPG_Config):
         self.config = config
 
     @staticmethod
-    def _butter_sos(filter_type: str,fs: float, order: int ,lowcut: float| None = None, highcut: float| None = None):
-        sos = scipy.signal.butter(order, [lowcut, highcut], btype=filter_type, fs=fs,output='sos')
+    def _butter_sos(
+        filter_type: str,
+        fs: float,
+        order: int,
+        lowcut: float | None = None,
+        highcut: float | None = None,
+    ):
+        sos = scipy.signal.butter(
+            order, [lowcut, highcut], btype=filter_type, fs=fs, output="sos"
+        )
         return sos
 
     def filter(self, signal: np.ndarray) -> np.ndarray:
@@ -32,18 +41,18 @@ class PPGAlgorithm(PPG_base):
         return filtered_ppg
 
     @staticmethod
-    def findPeaksPPG(signal:np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def findPeaksPPG(signal: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """
-                Detect all local maxima.
+        Detect all local maxima.
 
-                Returns
-                -------
-                peaksAmp : np.ndarray
-                    Amplitudes of detected peaks.
+        Returns
+        -------
+        peaksAmp : np.ndarray
+            Amplitudes of detected peaks.
 
-                peaksIndex : np.ndarray
-                    Sample indices of detected peaks.
-                """
+        peaksIndex : np.ndarray
+            Sample indices of detected peaks.
+        """
         peaksIndex, _ = scipy.signal.find_peaks(signal)
         peaksAmp = signal[peaksIndex]
 
@@ -69,7 +78,9 @@ class PPGAlgorithm(PPG_base):
         return valleysAmp, valleysIndex
 
     @staticmethod
-    def pairPeakValleys(signal:np.ndarray, peaksIndex: np.ndarray, valleysIndex: np.ndarray)-> Dict[str, np.ndarray]:
+    def pairPeakValleys(
+        signal: np.ndarray, peaksIndex: np.ndarray, valleysIndex: np.ndarray
+    ) -> Dict[str, np.ndarray]:
         """
         Pair each detected peak with the most recent preceding valley.
 
@@ -84,8 +95,8 @@ class PPGAlgorithm(PPG_base):
 
         for peakIndex in peaksIndex:
             while (
-                    valleyPointer < len(valleysIndex)
-                    and valleysIndex[valleyPointer] < peakIndex
+                valleyPointer < len(valleysIndex)
+                and valleysIndex[valleyPointer] < peakIndex
             ):
                 latestValley = valleysIndex[valleyPointer]
                 valleyPointer += 1
@@ -113,7 +124,7 @@ class PPGAlgorithm(PPG_base):
         }
 
     @staticmethod
-    def peaks_valleyDiff(peaksAmp: np.ndarray, valleysAmp: np.ndarray)-> np.ndarray:
+    def peaks_valleyDiff(peaksAmp: np.ndarray, valleysAmp: np.ndarray) -> np.ndarray:
         """
         Calculate peak-to-valley amplitude differences.
         """
@@ -122,9 +133,9 @@ class PPGAlgorithm(PPG_base):
 
     @staticmethod
     def validatePeaksPPG(
-            paired_data: Dict[str, np.ndarray],
-            threshold: float = 0.7,
-            window: int = 5,
+        paired_data: Dict[str, np.ndarray],
+        threshold: float = 0.7,
+        window: int = 5,
     ) -> Dict[str, np.ndarray]:
         peaksAmp = paired_data["PeaksAmp"]
         peaksIndex = paired_data["PairedPeaks"]
@@ -172,8 +183,6 @@ class PPGAlgorithm(PPG_base):
         )
 
         return validated_data["PeaksIndex"]
-
-
 
     def rr_intervals(self, peaks: np.ndarray) -> np.ndarray:
         # Implement RR interval calculation logic here
