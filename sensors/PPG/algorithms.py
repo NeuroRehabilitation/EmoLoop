@@ -227,7 +227,6 @@ class PPGAlgorithm(PPG_base):
         threshold,
         window,
     ) -> Dict[str, np.ndarray]:
-
         """
         Validate detected PPG peaks using adaptive local mean threshold filtering.
 
