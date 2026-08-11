@@ -1,4 +1,3 @@
-
 """
 sensors.ECG.config
 

@@ -101,7 +101,7 @@ class ECG:
     """
 
     def __init__(
-            self, algorithm: Optional[ECG_base] = None, config: Optional[ECG_Config] = None
+        self, algorithm: Optional[ECG_base] = None, config: Optional[ECG_Config] = None
     ) -> None:
         """
         Initialize the ECG processor.
