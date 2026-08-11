@@ -1,4 +1,3 @@
-
 """
 sensors.HRV.config
 

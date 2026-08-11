@@ -1,4 +1,3 @@
-
 """
 sensors.HRV.base
 
@@ -137,7 +136,7 @@ class HRV_base(ABC):
         Returns
         -------
         Dict[str, float]
-            Dictionary with heart rate statistics (in beats per minute). 
+            Dictionary with heart rate statistics (in beats per minute).
             Common keys include:
               - "Avg HR": mean heart rate
               - "Min HR": minimum heart rate
