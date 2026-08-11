@@ -1,4 +1,3 @@
-
 """
 sensors.PPG.processor
 ---------------------
@@ -155,19 +154,15 @@ class PPG:
 
         # Detect and validate PPG peaks. The algorithm is expected to return
         # a mapping with keys "PeaksAmp" and "PeaksIndex".
-        peak_data = self.algorithm.detect_peaks(
-            self._raw_signal
-        )
+        peak_data = self.algorithm.detect_peaks(self._raw_signal)
 
         # Store validated peak amplitudes and their sample indices for later access.
         self._peaks_amplitude = peak_data["PeaksAmp"]
         self._peaks_index = peak_data["PeaksIndex"]
 
         # Calculate intervals (in seconds) and timestamps from validated peak indices.
-        self._rr_intervals, self._rr_time = (
-            self.algorithm.rr_intervals(
-                self._peaks_index
-            )
+        self._rr_intervals, self._rr_time = self.algorithm.rr_intervals(
+            self._peaks_index
         )
 
         return {
