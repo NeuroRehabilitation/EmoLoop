@@ -1,4 +1,3 @@
-
 """
 sensors.HRV.algorithms
 
@@ -413,6 +412,7 @@ class HRVAlgorithm(HRV_base):
         - If the PSD or frequency arrays are empty or the integration yields
           non-finite results, entries will be set to np.nan.
         """
+
         def band_power(fmin, fmax):
             """
             Integrate PSD between fmin and fmax using trapezoidal rule.

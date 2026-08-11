@@ -1,4 +1,3 @@
-
 """
 sensors.HRV.processor
 High-level HRV processing wrapper.
