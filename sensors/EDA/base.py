@@ -139,7 +139,7 @@ class EDA_base(ABC):
         pass
 
     @abstractmethod
-    def frequency_domain_features(self, signal: np.ndarray) -> Dict[str, Any]:
+    def frequency_domain_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
         """
         Extract frequency-domain features from a filtered EDA signal.
 
@@ -150,9 +150,10 @@ class EDA_base(ABC):
 
         Parameters
         ----------
-        signal : np.ndarray
-            Filtered EDA signal samples as a 1-D numpy array of floats. Expected
-            shape is (n_samples,).
+        freqs : np.ndarray
+            Frequency vector as a 1-D numpy array of floats. Expected shape is (n_freqs,).
+        power : np.ndarray
+            Power spectral density as a 1-D numpy array of floats. Expected shape is (n_freqs,).
 
         Returns
         -------

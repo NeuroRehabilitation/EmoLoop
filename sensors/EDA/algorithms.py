@@ -163,3 +163,56 @@ class EDAAlgorithm(EDA_base):
         )
 
         return freqs, power
+
+    def frequency_domain_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
+
+        def band_power(fmin, fmax):
+            """
+            Integrate PSD between fmin and fmax using trapezoidal rule.
+            Returns np.nan if no frequencies fall in the band.
+            """
+            idx = (freqs >= fmin) & (freqs < fmax)
+            return (
+                scipy.integrate.trapezoid(power[idx], freqs[idx])
+                if np.any(idx)
+                else np.nan
+            )
+
+        # Compute band powers. Scale by 10^6 for convention (µs^2/Hz-like units).
+        vlf = float(
+            band_power(self.config.vlf_lfreq, self.config.vlf_hfreq) * pow(10, 6)
+        )
+        lf = float(band_power(self.config.lf_lfreq, self.config.lf_hfreq) * pow(10, 6))
+        hf = float(band_power(self.config.hf_lfreq, self.config.hf_hfreq) * pow(10, 6))
+        total_power = float(
+            band_power(self.config.vlf_lfreq, self.config.hf_hfreq) * pow(10, 6)
+        )
+
+        # Compute normalized units for LF and HF (exclude VLF from denominator).
+        # This normalization emphasizes the balance between sympathetic and
+        # parasympathetic nervous system activity.
+        if np.isfinite(total_power) and (total_power - vlf) > 0:
+            lf_norm = lf / (total_power - vlf) * 100
+            hf_norm = hf / (total_power - vlf) * 100
+        else:
+            lf_norm = np.nan
+            hf_norm = np.nan
+
+        # LF/HF ratio in normalized units (guard against division by zero).
+        # This ratio is often used as a marker of sympatho-vagal balance.
+        ratio = (
+            lf_norm / hf_norm
+            if np.isfinite(lf_norm) and np.isfinite(hf_norm) and hf_norm > 0
+            else np.nan
+        )
+
+        return {
+            "VLF_Power": vlf,
+            "LF_Power": lf,
+            "HF_Power": hf,
+            "Total_Power": total_power,
+            "LF_(nu)": lf_norm,
+            "HF_(nu)": hf_norm,
+            "LF/HF": ratio,
+        }
+
