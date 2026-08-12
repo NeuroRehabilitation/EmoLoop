@@ -116,14 +116,14 @@ class EDA_base(ABC):
         pass
 
     @abstractmethod
-    def frequencyAnalysis(self, signal: np.ndarray) -> Dict[str, Any]:
+    def frequencyAnalysis(self, signal: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
         """
         Perform frequency-domain analysis on the filtered EDA signal.
 
         This method should compute relevant frequency-domain features from the
         filtered EDA signal, such as power spectral density, frequency bands,
-        and other spectral characteristics. The output should be a dictionary
-        containing these features.
+        and other spectral characteristics. The output should be a tuple
+        containing the frequency vector and the corresponding power spectral density.
 
         Parameters
         ----------
@@ -133,9 +133,8 @@ class EDA_base(ABC):
 
         Returns
         -------
-        Dict[str, Any]
-            A dictionary containing extracted frequency-domain features from the EDA signal.
-            The keys and values should be documented by the concrete implementation.
+        tuple[np.ndarray, np.ndarray]
+            A tuple containing the frequency vector and the corresponding power spectral density.
         """
         pass
 
