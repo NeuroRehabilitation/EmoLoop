@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any, Tuple
 import numpy as np
 
+
 class EDA_base(ABC):
     """
     Abstract base class for Electrodermal Activity (EDA) signal processing.
@@ -67,7 +68,7 @@ class EDA_base(ABC):
         pass
 
     @abstractmethod
-    def getSCRfeatures(self,phasic_component: np.ndarray) -> Dict[str, Any]:
+    def getSCRfeatures(self, phasic_component: np.ndarray) -> Dict[str, Any]:
         """
         Extract features from the phasic component of the EDA signal.
 
@@ -91,7 +92,7 @@ class EDA_base(ABC):
         pass
 
     @abstractmethod
-    def getSCLfeatures(self,tonic_component: np.ndarray) -> Dict[str, Any]:
+    def getSCLfeatures(self, tonic_component: np.ndarray) -> Dict[str, Any]:
         """
         Extract features from the tonic component of the EDA signal.
 

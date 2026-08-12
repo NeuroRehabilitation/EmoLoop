@@ -1,4 +1,3 @@
-
 """
 sensors.EDA.config
 -------------------
@@ -26,6 +25,7 @@ Notes:
 """
 
 from dataclasses import dataclass
+
 
 @dataclass
 class EDA_Config:
@@ -100,17 +100,25 @@ class EDA_Config:
     resolution: float = 16  # ADC resolution in bits
 
     # Filter parameters
-    filter_type: str = "lowpass"  # Type of filter to apply (e.g., "bandpass", "lowpass", "highpass")
+    filter_type: str = (
+        "lowpass"  # Type of filter to apply (e.g., "bandpass", "lowpass", "highpass")
+    )
     lowpass_butter_order: int = 4  # Order of the low-pass Butterworth filter
     lowpass_freq: float = 3  # Low-pass filter cutoff frequency in Hz
     highpass_butter_order: int = 4  # Order of the high-pass Butterworth filter
     highpass_freq: float = 0.05  # High-pass filter cutoff frequency in Hz
 
     # Processing method and segment/window choices
-    get_component_method = str = "highpass"  # Method for EDA component extraction (e.g., "highpass", "cvxEDA","SparsEDA")
-    method: str = "neurokit"  # Method for EDA signal processing (e.g., "neurokit", "custom")
+    get_component_method = str = (
+        "highpass"  # Method for EDA component extraction (e.g., "highpass", "cvxEDA","SparsEDA")
+    )
+    method: str = (
+        "neurokit"  # Method for EDA signal processing (e.g., "neurokit", "custom")
+    )
     nperseg: int = 128  # Number of samples per segment for spectral processing (Welch)
-    window: str = "blackman"  # Window function for spectral estimation (e.g., "blackman", "hamming")
+    window: str = (
+        "blackman"  # Window function for spectral estimation (e.g., "blackman", "hamming")
+    )
 
     # Frequency-band definitions for spectral feature extraction (Hz)
     vlf_lfreq: float = 0.0033
