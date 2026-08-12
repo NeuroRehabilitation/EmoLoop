@@ -7,11 +7,12 @@ from sensors.EDA.base import EDA_base
 from sensors.EDA.config import EDA_Config
 import neurokit2 as nk
 
+
 class EDAAlgorithm(EDA_base):
     def __init__(self):
         self.config = EDA_Config()  # Initialize with default config
 
-    def convertEDA(self,signal: np.ndarray) -> np.ndarray:
+    def convertEDA(self, signal: np.ndarray) -> np.ndarray:
         VCC = self.config.VCC
         resolution = self.config.resolution
         signal_microS = (signal / pow(2, resolution)) * VCC / 0.12
@@ -31,15 +32,23 @@ class EDAAlgorithm(EDA_base):
         return scipy.signal.sosfiltfilt(sos, signal)
 
     def get_componentsEDA(self, signal: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        eda_components = nk.eda_phasic(signal, sampling_rate=self.config.sampling_rate,method=self.config.get_component_method)
+        eda_components = nk.eda_phasic(
+            signal,
+            sampling_rate=self.config.sampling_rate,
+            method=self.config.get_component_method,
+        )
 
         eda_phasic = eda_components["EDA_Phasic"].values
         eda_tonic = eda_components["EDA_Tonic"].values
 
         return eda_phasic, eda_tonic
 
-    def getSCRfeatures(self,phasic_component: np.ndarray) -> Dict[str, Any]:
-        signals, peaks = nk.eda_peaks(phasic_component, sampling_rate=self.config.sampling_rate,method=self.config.method)
+    def getSCRfeatures(self, phasic_component: np.ndarray) -> Dict[str, Any]:
+        signals, peaks = nk.eda_peaks(
+            phasic_component,
+            sampling_rate=self.config.sampling_rate,
+            method=self.config.method,
+        )
 
         SCR_Amplitude = peaks.get("SCR_Amplitude", None)
         SCR_RiseTime = peaks.get("SCR_RiseTime", None)
@@ -60,21 +69,61 @@ class EDAAlgorithm(EDA_base):
             "SCR_Amplitude": SCR_Amplitude,
             "SCR_RiseTime": SCR_RiseTime,
             "SCR_RecoveryTime": SCR_RecoveryTime,
-            "SCR_Avg_Amplitude": np.nanmean(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan,
-            "SCR_Avg_RiseTime": np.nanmean(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan,
-            "SCR_Avg_RecoveryTime": np.nanmean(SCR_RecoveryTime) if not np.isnan(SCR_RecoveryTime).all() else np.nan,
-            "SCR_STD_Amplitude": np.nanstd(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan,
-            "SCR_STD_RiseTime": np.nanstd(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan,
-            "SCR_STD_RecoveryTime": np.nanstd(SCR_RecoveryTime) if not np.isnan(SCR_RecoveryTime).all() else np.nan,
-            "SCR_Max_Amplitude": np.nanmax(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan,
-            "SCR_Max_RiseTime": np.nanmax(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan,
-            "SCR_Max_RecoveryTime": np.nanmax(SCR_RecoveryTime) if not np.isnan(SCR_RecoveryTime).all() else np.nan,
-            "SCR_Min_Amplitude": np.nanmin(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan,
-            "SCR_Min_RiseTime": np.nanmin(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan,
-            "SCR_Min_RecoveryTime": np.nanmin(SCR_RecoveryTime) if not np.isnan(SCR_RecoveryTime).all() else np.nan,
+            "SCR_Avg_Amplitude": (
+                np.nanmean(SCR_Amplitude)
+                if not np.isnan(SCR_Amplitude).all()
+                else np.nan
+            ),
+            "SCR_Avg_RiseTime": (
+                np.nanmean(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+            ),
+            "SCR_Avg_RecoveryTime": (
+                np.nanmean(SCR_RecoveryTime)
+                if not np.isnan(SCR_RecoveryTime).all()
+                else np.nan
+            ),
+            "SCR_STD_Amplitude": (
+                np.nanstd(SCR_Amplitude)
+                if not np.isnan(SCR_Amplitude).all()
+                else np.nan
+            ),
+            "SCR_STD_RiseTime": (
+                np.nanstd(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+            ),
+            "SCR_STD_RecoveryTime": (
+                np.nanstd(SCR_RecoveryTime)
+                if not np.isnan(SCR_RecoveryTime).all()
+                else np.nan
+            ),
+            "SCR_Max_Amplitude": (
+                np.nanmax(SCR_Amplitude)
+                if not np.isnan(SCR_Amplitude).all()
+                else np.nan
+            ),
+            "SCR_Max_RiseTime": (
+                np.nanmax(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+            ),
+            "SCR_Max_RecoveryTime": (
+                np.nanmax(SCR_RecoveryTime)
+                if not np.isnan(SCR_RecoveryTime).all()
+                else np.nan
+            ),
+            "SCR_Min_Amplitude": (
+                np.nanmin(SCR_Amplitude)
+                if not np.isnan(SCR_Amplitude).all()
+                else np.nan
+            ),
+            "SCR_Min_RiseTime": (
+                np.nanmin(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+            ),
+            "SCR_Min_RecoveryTime": (
+                np.nanmin(SCR_RecoveryTime)
+                if not np.isnan(SCR_RecoveryTime).all()
+                else np.nan
+            ),
         }
 
-    def getSCLfeatures(self,tonic_component: np.ndarray) -> Dict[str, Any]:
+    def getSCLfeatures(self, tonic_component: np.ndarray) -> Dict[str, Any]:
         SCL_AVG = np.nanmean(tonic_component) if tonic_component.size > 0 else np.nan
         SCL_STD = np.nanstd(tonic_component) if tonic_component.size > 0 else np.nan
         SCL_MAX = np.nanmax(tonic_component) if tonic_component.size > 0 else np.nan
@@ -95,17 +144,22 @@ class EDAAlgorithm(EDA_base):
         downsampled2 = scipy.signal.decimate(downsampled1, q=10, n=8)
         downsampled3 = scipy.signal.decimate(downsampled2, q=10, n=8)
 
-        sos = scipy.signal.butter(8,0.01,
-        btype="highpass",
+        sos = scipy.signal.butter(
+            8,
+            0.01,
+            btype="highpass",
             fs=self.config.sampling_rate,
             output="sos",
         )
 
-        filtered_signal= scipy.signal.sosfiltfilt(sos, downsampled3)
+        filtered_signal = scipy.signal.sosfiltfilt(sos, downsampled3)
 
         freqs, power = scipy.signal.welch(
-            filtered_signal, fs=fs_new, nperseg=self.config.nperseg, window=self.config.window,noverlap=64
+            filtered_signal,
+            fs=fs_new,
+            nperseg=self.config.nperseg,
+            window=self.config.window,
+            noverlap=64,
         )
 
-        return freqs,power
-
+        return freqs, power
