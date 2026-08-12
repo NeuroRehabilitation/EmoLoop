@@ -1,4 +1,3 @@
-
 """
 Module: sensors.EDA.algorithms
 Description: Implementation of EDA (Electrodermal Activity) signal processing algorithms.
@@ -439,7 +438,9 @@ class EDAAlgorithm(EDA_base):
 
         return freqs, power
 
-    def frequency_domain_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
+    def frequency_domain_features(
+        self, freqs: np.ndarray, power: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Extract frequency-domain features from the power spectral density.
 
@@ -493,6 +494,7 @@ class EDAAlgorithm(EDA_base):
         Band power integration uses scipy.integrate.trapezoid() for numerical
         integration of the PSD curve using the trapezoidal rule.
         """
+
         def band_power(fmin, fmax):
             """
             Integrate PSD between fmin and fmax using trapezoidal rule.

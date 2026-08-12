@@ -1,4 +1,3 @@
-
 """
 Module: sensors.EDA.base
 Description: Abstract base class for Electrodermal Activity (EDA) signal processing.
