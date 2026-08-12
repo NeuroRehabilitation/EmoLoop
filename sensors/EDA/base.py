@@ -139,7 +139,9 @@ class EDA_base(ABC):
         pass
 
     @abstractmethod
-    def frequency_domain_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
+    def frequency_domain_features(
+        self, freqs: np.ndarray, power: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Extract frequency-domain features from a filtered EDA signal.
 

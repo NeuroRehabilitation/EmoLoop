@@ -164,7 +164,9 @@ class EDAAlgorithm(EDA_base):
 
         return freqs, power
 
-    def frequency_domain_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
+    def frequency_domain_features(
+        self, freqs: np.ndarray, power: np.ndarray
+    ) -> Dict[str, Any]:
 
         def band_power(fmin, fmax):
             """
@@ -215,4 +217,3 @@ class EDAAlgorithm(EDA_base):
             "HF_(nu)": hf_norm,
             "LF/HF": ratio,
         }
-
