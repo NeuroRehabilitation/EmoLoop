@@ -132,7 +132,7 @@ class EDAAlgorithm(EDA_base):
         """
         sos = scipy.signal.butter(
             self.config.lowpass_butter_order,
-            [self.config.lowpass_freq, self.config.highpass_freq],
+            self.config.highpass_freq,
             btype=self.config.filter_type,
             fs=self.config.sampling_rate,
             output="sos",
