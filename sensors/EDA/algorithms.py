@@ -11,8 +11,8 @@ from typing import Tuple, Dict, Any
 
 import numpy as np
 import scipy
-from sensors.EDA.base import EDA_base
 from sensors.EDA.config import EDA_Config
+from sensors.EDA.base import EDA_base
 import neurokit2 as nk
 
 
@@ -556,3 +556,7 @@ class EDAAlgorithm(EDA_base):
             "HF_(nu)": hf_norm,
             "LF/HF": ratio,
         }
+
+    def get_config(self) -> Dict[str, Any]:
+
+        return self.config.__dict__

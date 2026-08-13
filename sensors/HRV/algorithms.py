@@ -822,3 +822,20 @@ class HRVAlgorithm(HRV_base):
         - Higher values indicate more complex, variable heart rate patterns.
         """
         return float(round(SD2 / SD1, 4)) if SD1 != 0 else np.nan
+
+    def get_config(self) -> Dict[str, Any]:
+        """
+        Retrieve the configuration parameters used by the algorithm.
+
+        Returns a dictionary containing all configuration settings used by the
+        algorithm (e.g., sampling rate, filter parameters, peak detection
+        thresholds). This allows callers to inspect how the algorithm is
+        configured and serialize/persist the configuration if needed.
+
+        Returns
+        -------
+        Dict[str, Any]
+            Dictionary of configuration parameters. Keys and values are
+            derived from the `EDA_Config` instance.
+        """
+        return self.config.__dict__

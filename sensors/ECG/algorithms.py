@@ -679,15 +679,13 @@ class PanTompkinsAlgorithm(ECG_base):
 
         return rr_intervals, rr_time
 
-    def get_config(self):
+    def get_config(self)-> Dict[str, Any]:
         """
         Get the configuration of the ECG sensor/algorithm.
 
         Returns
         -------
-        ECG_Config
-            The configuration object passed during initialization, containing
-            all algorithm parameters (sampling rate, filter settings, peak
-            detection thresholds, etc.).
+        Dict[str, Any]
+            A dictionary containing all configuration parameters.
         """
-        return self.config
+        return self.config.__dict__
