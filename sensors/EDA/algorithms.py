@@ -262,16 +262,26 @@ class EDAAlgorithm(EDA_base):
         SCR_RecoveryTime = _to_array_or_nan(SCR_RecoveryTime)
 
         return {
-            "SCR_Amplitude": float(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan,
-            "SCR_RiseTime": float(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan,
-            "SCR_RecoveryTime": float(SCR_RecoveryTime) if not np.isnan(SCR_RecoveryTime).all() else np.nan,
+            "SCR_Amplitude": (
+                float(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan
+            ),
+            "SCR_RiseTime": (
+                float(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+            ),
+            "SCR_RecoveryTime": (
+                float(SCR_RecoveryTime)
+                if not np.isnan(SCR_RecoveryTime).all()
+                else np.nan
+            ),
             "SCR_Avg_Amplitude": (
                 float(np.nanmean(SCR_Amplitude))
                 if not np.isnan(SCR_Amplitude).all()
                 else np.nan
             ),
             "SCR_Avg_RiseTime": (
-                float(np.nanmean(SCR_RiseTime)) if not np.isnan(SCR_RiseTime).all() else np.nan
+                float(np.nanmean(SCR_RiseTime))
+                if not np.isnan(SCR_RiseTime).all()
+                else np.nan
             ),
             "SCR_Avg_RecoveryTime": (
                 float(np.nanmean(SCR_RecoveryTime))
@@ -284,7 +294,9 @@ class EDAAlgorithm(EDA_base):
                 else np.nan
             ),
             "SCR_STD_RiseTime": (
-                float(np.nanstd(SCR_RiseTime)) if not np.isnan(SCR_RiseTime).all() else np.nan
+                float(np.nanstd(SCR_RiseTime))
+                if not np.isnan(SCR_RiseTime).all()
+                else np.nan
             ),
             "SCR_STD_RecoveryTime": (
                 float(np.nanstd(SCR_RecoveryTime))
@@ -297,7 +309,9 @@ class EDAAlgorithm(EDA_base):
                 else np.nan
             ),
             "SCR_Max_RiseTime": (
-                float(np.nanmax(SCR_RiseTime)) if not np.isnan(SCR_RiseTime).all() else np.nan
+                float(np.nanmax(SCR_RiseTime))
+                if not np.isnan(SCR_RiseTime).all()
+                else np.nan
             ),
             "SCR_Max_RecoveryTime": (
                 float(np.nanmax(SCR_RecoveryTime))
@@ -310,7 +324,9 @@ class EDAAlgorithm(EDA_base):
                 else np.nan
             ),
             "SCR_Min_RiseTime": (
-                float(np.nanmin(SCR_RiseTime)) if not np.isnan(SCR_RiseTime).all() else np.nan
+                float(np.nanmin(SCR_RiseTime))
+                if not np.isnan(SCR_RiseTime).all()
+                else np.nan
             ),
             "SCR_Min_RecoveryTime": (
                 float(np.nanmin(SCR_RecoveryTime))
@@ -354,10 +370,18 @@ class EDAAlgorithm(EDA_base):
         is associated with sustained emotional states, fatigue, and overall
         arousal level.
         """
-        SCL_AVG = float(np.nanmean(tonic_component) if tonic_component.size > 0 else np.nan)
-        SCL_STD = float(np.nanstd(tonic_component) if tonic_component.size > 0 else np.nan)
-        SCL_MAX = float(np.nanmax(tonic_component) if tonic_component.size > 0 else np.nan)
-        SCL_MIN = float(np.nanmin(tonic_component) if tonic_component.size > 0 else np.nan)
+        SCL_AVG = float(
+            np.nanmean(tonic_component) if tonic_component.size > 0 else np.nan
+        )
+        SCL_STD = float(
+            np.nanstd(tonic_component) if tonic_component.size > 0 else np.nan
+        )
+        SCL_MAX = float(
+            np.nanmax(tonic_component) if tonic_component.size > 0 else np.nan
+        )
+        SCL_MIN = float(
+            np.nanmin(tonic_component) if tonic_component.size > 0 else np.nan
+        )
 
         return {
             "SCL_AVG": SCL_AVG,
