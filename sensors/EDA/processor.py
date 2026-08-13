@@ -1,4 +1,3 @@
-
 """
 sensors.EDA.processor
 
@@ -113,7 +112,9 @@ class EDA:
         self._power: Optional[np.ndarray] = None
         self._freq_features: Optional[Dict[str, Any]] = None
 
-    def process(self, signal: np.ndarray, compute_frequency: bool = True) -> Dict[str, Any]:
+    def process(
+        self, signal: np.ndarray, compute_frequency: bool = True
+    ) -> Dict[str, Any]:
         """
         Execute the complete EDA processing pipeline on a raw signal.
 
@@ -348,7 +349,9 @@ class EDA:
         """
         return self.algorithm.frequencyAnalysis(signal)
 
-    def frequency_features(self, freqs: np.ndarray, power: np.ndarray) -> Dict[str, Any]:
+    def frequency_features(
+        self, freqs: np.ndarray, power: np.ndarray
+    ) -> Dict[str, Any]:
         """
         Compute frequency-domain feature metrics from power spectral density.
 
