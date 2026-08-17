@@ -269,9 +269,7 @@ class EDAAlgorithm(EDA_base):
                 SCR_RiseTime if not np.isnan(SCR_RiseTime).all() else np.nan
             ),
             "SCR_RecoveryTime": (
-                SCR_RecoveryTime
-                if not np.isnan(SCR_RecoveryTime).all()
-                else np.nan
+                SCR_RecoveryTime if not np.isnan(SCR_RecoveryTime).all() else np.nan
             ),
             "SCR_Avg_Amplitude": (
                 float(np.nanmean(SCR_Amplitude))
