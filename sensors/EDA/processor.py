@@ -211,6 +211,29 @@ class EDA:
             "freq_features": freq_features,
         }
 
+    def convertEDA(self, signal: np.ndarray) -> np.ndarray:
+        """
+        Convert raw EDA signal from ADC units to physical units (e.g., microsiemens).
+
+        This method delegates to the algorithm's convertEDA() implementation, which
+        applies the appropriate scaling and conversion based on hardware parameters.
+
+        Parameters
+        ----------
+        signal : np.ndarray
+            Raw EDA signal in ADC units.
+
+        Returns
+        -------
+        np.ndarray
+            EDA signal converted to physical units (e.g., microsiemens).
+
+        See Also
+        --------
+        algorithm.convertEDA : The underlying algorithm implementation.
+        """
+        return self.algorithm.convertEDA(signal)
+
     def filter(self, signal: np.ndarray) -> np.ndarray:
         """
         Apply filtering to remove noise and baseline drift from raw EDA signal.

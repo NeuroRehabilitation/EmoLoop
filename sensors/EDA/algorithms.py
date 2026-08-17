@@ -93,7 +93,7 @@ class EDAAlgorithm(EDA_base):
         VCC = self.config.VCC
         resolution = self.config.resolution
         signal_microS = (signal / pow(2, resolution)) * VCC / 0.12
-        signal_S = signal_microS * pow(10, -6)
+        signal_S = np.asarray(signal_microS * pow(10, -6))
 
         return signal_S
 
@@ -263,13 +263,13 @@ class EDAAlgorithm(EDA_base):
 
         return {
             "SCR_Amplitude": (
-                float(SCR_Amplitude) if not np.isnan(SCR_Amplitude).all() else np.nan
+                SCR_Amplitude if not np.isnan(SCR_Amplitude).all() else np.nan
             ),
             "SCR_RiseTime": (
-                float(SCR_RiseTime) if not np.isnan(SCR_RiseTime).all() else np.nan
+                SCR_RiseTime if not np.isnan(SCR_RiseTime).all() else np.nan
             ),
             "SCR_RecoveryTime": (
-                float(SCR_RecoveryTime)
+                SCR_RecoveryTime
                 if not np.isnan(SCR_RecoveryTime).all()
                 else np.nan
             ),
