@@ -31,15 +31,14 @@ class RESPAlgorithm(RESP_base):
 
         VCC = self.config.VCC
         resolution = self.config.resolution
-        signal_V = ((signal / (2 ** resolution - 1))-1/2) * VCC/self.config.gain
+        signal_V = ((signal / (2**resolution - 1)) - 1 / 2) * VCC / self.config.gain
         signal_V = np.asarray(signal_V)
 
         return signal_V
 
-
     def getRESPsignals(
-            self,
-            signal: np.ndarray,
+        self,
+        signal: np.ndarray,
     ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
         """
         Process the raw respiratory signal with NeuroKit2.
@@ -80,7 +79,7 @@ class RESPAlgorithm(RESP_base):
 
         return signals, info
 
-    def getRespRate(self,signals:pd.DataFrame) -> Dict[str, Any]:
+    def getRespRate(self, signals: pd.DataFrame) -> Dict[str, Any]:
         """
         Extract respiratory rate.
 
@@ -100,55 +99,63 @@ class RESPAlgorithm(RESP_base):
             If one or more required columns are unavailable.
         """
         if "RSP_Rate" not in signals.columns:
-            raise KeyError(
-                "Missing respiratory column: 'RSP_Rate'"
-            )
+            raise KeyError("Missing respiratory column: 'RSP_Rate'")
 
         rsp_rate = signals["RSP_Rate"]
 
-        return {"Avg_Resp_Rate": (float(np.nanmean(rsp_rate))
-                if not np.isnan(rsp_rate).all() else np.nan),
-                "Min_Resp_Rate": (float(np.nanmin(rsp_rate))
-                if not np.isnan(rsp_rate).all() else np.nan),
-                "Max_Resp_Rate": (float(np.nanmax(rsp_rate))
-                if not np.isnan(rsp_rate).all() else np.nan),
-                "STD_Resp_Rate": (float(np.nanstd(rsp_rate))
-                if not np.isnan(rsp_rate).all() else np.nan),
-                }
+        return {
+            "Avg_Resp_Rate": (
+                float(np.nanmean(rsp_rate)) if not np.isnan(rsp_rate).all() else np.nan
+            ),
+            "Min_Resp_Rate": (
+                float(np.nanmin(rsp_rate)) if not np.isnan(rsp_rate).all() else np.nan
+            ),
+            "Max_Resp_Rate": (
+                float(np.nanmax(rsp_rate)) if not np.isnan(rsp_rate).all() else np.nan
+            ),
+            "STD_Resp_Rate": (
+                float(np.nanstd(rsp_rate)) if not np.isnan(rsp_rate).all() else np.nan
+            ),
+        }
 
-    def getRespAmplitude(self,signals:pd.DataFrame) -> Dict[str, Any]:
+    def getRespAmplitude(self, signals: pd.DataFrame) -> Dict[str, Any]:
         if "RSP_Amplitude" not in signals.columns:
-            raise KeyError(
-                "Missing respiratory column: 'RSP_Amplitude'"
-            )
+            raise KeyError("Missing respiratory column: 'RSP_Amplitude'")
 
         rsp_amp = signals["RSP_Amplitude"]
 
-        return {"Avg_Resp_Amplitude": (float(np.nanmean(rsp_amp))
-                if not np.isnan(rsp_amp).all() else np.nan),
-                "Min_Resp_Amplitude": (float(np.nanmin(rsp_amp))
-                if not np.isnan(rsp_amp).all() else np.nan),
-                "Max_Resp_Amplitude": (float(np.nanmax(rsp_amp))
-                if not np.isnan(rsp_amp).all() else np.nan),
-                "STD_Resp_Amplitude": (float(np.nanstd(rsp_amp))
-                if not np.isnan(rsp_amp).all() else np.nan),
-                }
+        return {
+            "Avg_Resp_Amplitude": (
+                float(np.nanmean(rsp_amp)) if not np.isnan(rsp_amp).all() else np.nan
+            ),
+            "Min_Resp_Amplitude": (
+                float(np.nanmin(rsp_amp)) if not np.isnan(rsp_amp).all() else np.nan
+            ),
+            "Max_Resp_Amplitude": (
+                float(np.nanmax(rsp_amp)) if not np.isnan(rsp_amp).all() else np.nan
+            ),
+            "STD_Resp_Amplitude": (
+                float(np.nanstd(rsp_amp)) if not np.isnan(rsp_amp).all() else np.nan
+            ),
+        }
 
-    def getRespRVT(self,signals:pd.DataFrame) -> Dict[str, Any]:
+    def getRespRVT(self, signals: pd.DataFrame) -> Dict[str, Any]:
         if "RSP_RVT" not in signals.columns:
-            raise KeyError(
-                "Missing respiratory column: 'RSP_RVT'"
-            )
+            raise KeyError("Missing respiratory column: 'RSP_RVT'")
 
         rsp_rvt = signals["RSP_RVT"]
 
-        return {"Avg_Resp_RVT": (float(np.nanmean(rsp_rvt))
-                if not np.isnan(rsp_rvt).all() else np.nan),
-                "Min_Resp_RVT": (float(np.nanmin(rsp_rvt))
-                if not np.isnan(rsp_rvt).all() else np.nan),
-                "Max_Resp_RVT": (float(np.nanmax(rsp_rvt))
-                if not np.isnan(rsp_rvt).all() else np.nan),
-                "STD_Resp_RVT": (float(np.nanstd(rsp_rvt))
-                if not np.isnan(rsp_rvt).all() else np.nan),
-                }
-
+        return {
+            "Avg_Resp_RVT": (
+                float(np.nanmean(rsp_rvt)) if not np.isnan(rsp_rvt).all() else np.nan
+            ),
+            "Min_Resp_RVT": (
+                float(np.nanmin(rsp_rvt)) if not np.isnan(rsp_rvt).all() else np.nan
+            ),
+            "Max_Resp_RVT": (
+                float(np.nanmax(rsp_rvt)) if not np.isnan(rsp_rvt).all() else np.nan
+            ),
+            "STD_Resp_RVT": (
+                float(np.nanstd(rsp_rvt)) if not np.isnan(rsp_rvt).all() else np.nan
+            ),
+        }
