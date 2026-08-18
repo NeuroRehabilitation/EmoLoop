@@ -238,9 +238,7 @@ class RESP:
             raise ValueError("Signal must be non-empty")
 
         if signal.ndim != 1:
-            raise ValueError(
-                "Respiratory signal must be a one-dimensional array"
-            )
+            raise ValueError("Respiratory signal must be a one-dimensional array")
 
         self._raw_signal = signal
 
@@ -250,17 +248,11 @@ class RESP:
             self._converted_signal
         )
 
-        self._resp_rate = self.algorithm.getRespRate(
-            self._signals
-        )
+        self._resp_rate = self.algorithm.getRespRate(self._signals)
 
-        self._resp_amplitude = self.algorithm.getRespAmplitude(
-            self._signals
-        )
+        self._resp_amplitude = self.algorithm.getRespAmplitude(self._signals)
 
-        self._resp_rvt = self.algorithm.getRespRVT(
-            self._signals
-        )
+        self._resp_rvt = self.algorithm.getRespRVT(self._signals)
 
         self._rrv = None
         self._rav = None
@@ -423,9 +415,7 @@ class RESP:
         """
         if signals is not None or info is not None:
             if signals is None or info is None:
-                raise ValueError(
-                    "Both signals and info must be provided together"
-                )
+                raise ValueError("Both signals and info must be provided together")
 
             return self.algorithm.getRRV(signals, info)
 
@@ -456,9 +446,7 @@ class RESP:
         """
         if signals is not None or info is not None:
             if signals is None or info is None:
-                raise ValueError(
-                    "Both signals and info must be provided together"
-                )
+                raise ValueError("Both signals and info must be provided together")
 
             return self.algorithm.getRAV(signals, info)
 
@@ -553,4 +541,3 @@ class RESP:
         self._resp_rvt = None
         self._rrv = None
         self._rav = None
-
