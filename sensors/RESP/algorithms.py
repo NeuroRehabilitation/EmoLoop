@@ -331,60 +331,60 @@ class RESPAlgorithm(RESP_base):
             ),
         }
 
-    def getRAV(self,signals: pd.DataFrame, info: Dict[str, Any]) -> pd.DataFrame:
+    def getRAV(self, signals: pd.DataFrame, info: Dict[str, Any]) -> pd.DataFrame:
         """
-            Calculate respiratory-amplitude-variability (RAV) metrics.
+        Calculate respiratory-amplitude-variability (RAV) metrics.
 
-            Parameters
-            ----------
-            signals : pandas.DataFrame
-                Processed respiratory signals returned by ``getRESPsignals()``.
+        Parameters
+        ----------
+        signals : pandas.DataFrame
+            Processed respiratory signals returned by ``getRESPsignals()``.
 
-                The DataFrame must contain the following column:
+            The DataFrame must contain the following column:
 
-                - ``RSP_Amplitude``: Respiratory-amplitude signal interpolated over
-                  the recording.
+            - ``RSP_Amplitude``: Respiratory-amplitude signal interpolated over
+              the recording.
 
-            info : Dict[str, Any]
-                Metadata returned by NeuroKit2 during respiratory signal processing.
+        info : Dict[str, Any]
+            Metadata returned by NeuroKit2 during respiratory signal processing.
 
-                The dictionary must contain the following keys:
+            The dictionary must contain the following keys:
 
-                - ``RSP_Peaks``: Sample indices of detected respiratory peaks.
-                - ``RSP_Troughs``: Sample indices of detected respiratory troughs.
+            - ``RSP_Peaks``: Sample indices of detected respiratory peaks.
+            - ``RSP_Troughs``: Sample indices of detected respiratory troughs.
 
-            Returns
-            -------
-            pandas.DataFrame
-                DataFrame containing respiratory-amplitude-variability metrics
-                calculated by ``neurokit2.rsp_rav()``.
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame containing respiratory-amplitude-variability metrics
+            calculated by ``neurokit2.rsp_rav()``.
 
-                Depending on the NeuroKit2 version, the returned DataFrame may
-                contain amplitude mean, standard deviation, RMSSD, coefficient of
-                variation, and other RAV-related measures.
+            Depending on the NeuroKit2 version, the returned DataFrame may
+            contain amplitude mean, standard deviation, RMSSD, coefficient of
+            variation, and other RAV-related measures.
 
-            Raises
-            ------
-            KeyError
-                Raised when ``RSP_Amplitude`` is not available in ``signals``.
+        Raises
+        ------
+        KeyError
+            Raised when ``RSP_Amplitude`` is not available in ``signals``.
 
-            KeyError
-                Raised when one or more required respiratory-event keys are not
-                available in ``info``.
+        KeyError
+            Raised when one or more required respiratory-event keys are not
+            available in ``info``.
 
-            Notes
-            -----
-            RAV quantifies variation in respiratory amplitude from breath to breath.
-            The respiratory-amplitude signal is supplied through
-            ``signals["RSP_Amplitude"]``.
+        Notes
+        -----
+        RAV quantifies variation in respiratory amplitude from breath to breath.
+        The respiratory-amplitude signal is supplied through
+        ``signals["RSP_Amplitude"]``.
 
-            The detected respiratory peaks and troughs are supplied through
-            ``info["RSP_Peaks"]`` and ``info["RSP_Troughs"]``. These event locations
-            allow NeuroKit2 to calculate amplitude variability using respiratory
-            cycles rather than treating every sample as an independent breath.
+        The detected respiratory peaks and troughs are supplied through
+        ``info["RSP_Peaks"]`` and ``info["RSP_Troughs"]``. These event locations
+        allow NeuroKit2 to calculate amplitude variability using respiratory
+        cycles rather than treating every sample as an independent breath.
 
-            The returned DataFrame generally contains segment-level RAV metrics rather
-            than a sample-by-sample time series.
+        The returned DataFrame generally contains segment-level RAV metrics rather
+        than a sample-by-sample time series.
         """
 
         if "RSP_Amplitude" not in signals.columns:
@@ -395,73 +395,71 @@ class RESPAlgorithm(RESP_base):
             "RSP_Troughs",
         ]
 
-        missing_columns = [
-            key
-            for key in required_keys
-            if key not in info
-        ]
+        missing_columns = [key for key in required_keys if key not in info]
 
         if missing_columns:
-            raise KeyError(
-                f"Missing respiratory columns: {missing_columns}"
-            )
+            raise KeyError(f"Missing respiratory columns: {missing_columns}")
 
-        rsp_rav = nk.rsp_rav(signals["RSP_Amplitude"], peaks=info["RSP_Peaks"], troughs=info["RSP_Troughs"])
+        rsp_rav = nk.rsp_rav(
+            signals["RSP_Amplitude"],
+            peaks=info["RSP_Peaks"],
+            troughs=info["RSP_Troughs"],
+        )
 
         return rsp_rav
 
-    def getRRV(self, signals: pd.DataFrame, info: Dict[str,Any]) -> pd.DataFrame:
+    def getRRV(self, signals: pd.DataFrame, info: Dict[str, Any]) -> pd.DataFrame:
         """
-            Calculate respiratory-rate-variability (RRV) metrics.
+        Calculate respiratory-rate-variability (RRV) metrics.
 
-            Parameters
-            ----------
-            signals : pandas.DataFrame
-                Processed respiratory signals returned by ``getRESPsignals()``.
+        Parameters
+        ----------
+        signals : pandas.DataFrame
+            Processed respiratory signals returned by ``getRESPsignals()``.
 
-                The DataFrame must contain the following column:
+            The DataFrame must contain the following column:
 
-                - ``RSP_Rate``: Respiratory-rate signal interpolated over time.
+            - ``RSP_Rate``: Respiratory-rate signal interpolated over time.
 
-            info : Dict[str, Any]
-                Metadata returned by NeuroKit2 during respiratory signal processing.
+        info : Dict[str, Any]
+            Metadata returned by NeuroKit2 during respiratory signal processing.
 
-                The dictionary must contain:
+            The dictionary must contain:
 
-                - ``RSP_Troughs``: Sample indices corresponding to the detected
-                  respiratory troughs.
+            - ``RSP_Troughs``: Sample indices corresponding to the detected
+              respiratory troughs.
 
-            Returns
-            -------
-            pandas.DataFrame
-                DataFrame containing respiratory-rate-variability metrics calculated
-                by ``neurokit2.rsp_rrv()``.
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame containing respiratory-rate-variability metrics calculated
+            by ``neurokit2.rsp_rrv()``.
 
-                Depending on the NeuroKit2 version and the available respiratory
-                events, the returned DataFrame may include time-domain, frequency-
-                domain, and nonlinear RRV measures.
+            Depending on the NeuroKit2 version and the available respiratory
+            events, the returned DataFrame may include time-domain, frequency-
+            domain, and nonlinear RRV measures.
 
-            Raises
-            ------
-            KeyError
-                Raised when the ``RSP_Rate`` column is not available in ``signals``.
+        Raises
+        ------
+        KeyError
+            Raised when the ``RSP_Rate`` column is not available in ``signals``.
 
-            KeyError
-                Raised when ``RSP_Troughs`` is not available in ``info``.
+        KeyError
+            Raised when ``RSP_Troughs`` is not available in ``info``.
 
-            Notes
-            -----
-            RRV describes variation in the time intervals between consecutive
-            respiratory events. The respiratory-rate signal is supplied through
-            ``signals["RSP_Rate"]``, while the detected trough locations are supplied
-            through ``info["RSP_Troughs"]``.
+        Notes
+        -----
+        RRV describes variation in the time intervals between consecutive
+        respiratory events. The respiratory-rate signal is supplied through
+        ``signals["RSP_Rate"]``, while the detected trough locations are supplied
+        through ``info["RSP_Troughs"]``.
 
-            The sampling rate is obtained from ``self.config.sampling_rate`` and is
-            passed to NeuroKit2 for correct temporal interpretation of the signal
-            and trough locations.
+        The sampling rate is obtained from ``self.config.sampling_rate`` and is
+        passed to NeuroKit2 for correct temporal interpretation of the signal
+        and trough locations.
 
-            The returned DataFrame generally contains one row of segment-level RRV
-            metrics rather than a sample-by-sample time series.
+        The returned DataFrame generally contains one row of segment-level RRV
+        metrics rather than a sample-by-sample time series.
         """
 
         if "RSP_Rate" not in signals.columns:
@@ -469,6 +467,10 @@ class RESPAlgorithm(RESP_base):
         if "RSP_Troughs" not in info:
             raise KeyError("Missing respiratory troughs in info dictionary")
 
-        rrv_dataframe = nk.rsp_rrv(signals["RSP_Rate"], troughs=info["RSP_Troughs"], sampling_rate=self.config.sampling_rate)
+        rrv_dataframe = nk.rsp_rrv(
+            signals["RSP_Rate"],
+            troughs=info["RSP_Troughs"],
+            sampling_rate=self.config.sampling_rate,
+        )
 
         return rrv_dataframe
